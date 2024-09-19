@@ -1,0 +1,27 @@
+USE [Porta_MemóriaDB]
+GO
+
+/****** Object:  Table [dbo].[PortaMemoria]    Script Date: 19/09/2024 07:58:38 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PortaMemoria](
+	[USER] [int] IDENTITY(1,1) NOT NULL,
+	[NOME] [varchar](50) NULL,
+	[SOBRENOME] [varchar](50) NULL,
+	[EMAIL] [varchar](50) NULL,
+	[SENHA] [nchar](10) NULL,
+	[TELEFONE] [varchar](50) NULL,
+	[CPF] [varchar](50) NULL,
+	[TIPO] [varchar](50) NULL,
+	[ATIVO] [char](10) NULL,
+ CONSTRAINT [PK_Porta_MemóriaDB] PRIMARY KEY CLUSTERED 
+(
+	[USER] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
