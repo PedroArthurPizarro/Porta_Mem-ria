@@ -1,0 +1,34 @@
+USE [Porta_MemóriaDB]
+GO
+
+/****** Object:  Table [dbo].[Documentos]    Script Date: 19/09/2024 07:57:59 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Documentos](
+	[DocumentoID] [int] IDENTITY(1,1) NOT NULL,
+	[UsuarioID] [int] NULL,
+	[TipoDocumento] [varchar](50) NULL,
+	[Conteudo] [text] NULL,
+	[DataInsercao] [datetime] NULL,
+	[Lixeira] [bit] NULL,
+ CONSTRAINT [PK_Documentos] PRIMARY KEY CLUSTERED 
+(
+	[DocumentoID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Documentos] ADD  DEFAULT ((0)) FOR [Lixeira]
+GO
+
+ALTER TABLE [dbo].[Documentos]  WITH CHECK ADD  CONSTRAINT [FK_Documentos_Porta_MemóriaDB] FOREIGN KEY([UsuarioID])
+REFERENCES [dbo].[PortaMemoria] ([USER])
+GO
+
+ALTER TABLE [dbo].[Documentos] CHECK CONSTRAINT [FK_Documentos_Porta_MemóriaDB]
+GO
+
