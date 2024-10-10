@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.UI;
@@ -13,7 +13,8 @@ namespace Porta_Memória
         {
             if (Session["UsuarioId"] == null)
             {
-                Response.Write("Usuário não autenticado.");
+                Response.Redirect("Login.aspx");
+
             }
             else
             {
@@ -55,31 +56,10 @@ namespace Porta_Memória
                     {
                         string tipoDocumento = row["TipoDocumento"].ToString();
                         string conteudo = row["Conteudo"].ToString();
-
-                        switch (tipoDocumento)
-                        {
-                            case "CPF":
-                                TextBoxCPF.Text = conteudo;
-                                break;
-                            case "RG":
-                                TextBoxRG.Text = conteudo;
-                                break;
-                            case "Telefone":
-                                TextBoxTEL.Text = conteudo;
-                                break;
-                            case "Senha Gmail":
-                                TextBoxGM.Text = conteudo;
-                                break;
-                            case "Senha Hotmail":
-                                TextBoxHOT.Text = conteudo;
-                                break;
-                        }
                     }
                 }
             }
         }
-
-
 
         protected void ButtonAddDoc_Click(object sender, EventArgs e)
         {
@@ -114,12 +94,13 @@ namespace Porta_Memória
             }
             else
             {
-                Response.Write("Por favor, preencha todos os campos.");
+                lblMessage.Text = "Por favor, preencha todos os campos.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
             }
         }
 
-// Método genérico para salvar qualquer documento
-private void SalvarDocumento(string tipoDocumento, string conteudo)
+        // Método genérico para salvar qualquer documento
+        private void SalvarDocumento(string tipoDocumento, string conteudo)
         {
             try
             {
@@ -162,61 +143,12 @@ private void SalvarDocumento(string tipoDocumento, string conteudo)
 
         private void LimparCampo(string tipoDocumento)
         {
-            switch (tipoDocumento)
-            {
-                case "CPF":
-                    TextBoxCPF.Text = "";
-                    break;
-                case "RG":
-                    TextBoxRG.Text = "";
-                    break;
-                case "Telefone":
-                    TextBoxTEL.Text = "";
-                    break;
-                case "Senha Gmail":
-                    TextBoxGM.Text = "";
-                    break;
-                case "Senha Hotmail":
-                    TextBoxHOT.Text = "";
-                    break;
-            }
+            
             CarregarDocumentos();
         }
 
         // Eventos dos botões salvar
-        protected void ButtonSaveCPF_Click(object sender, EventArgs e)
-        {
-            SalvarDocumento("CPF", TextBoxCPF.Text.Trim());
-            CarregarDocumentos();// Corrigido de TextBoxRG para TextBoxCPF
-        }
-        protected void ButtonSaveRG_Click(object sender, EventArgs e)
-        {
-            SalvarDocumento("RG", TextBoxRG.Text.Trim());
-            CarregarDocumentos();
-        }
-        protected void ButtonSaveTEL_Click(object sender, EventArgs e)
-        {
-            SalvarDocumento("Telefone", TextBoxTEL.Text.Trim());
-            CarregarDocumentos();// Corrigido de TextBoxRG para TextBoxTEL
-        }
-        protected void ButtonSaveGM_Click(object sender, EventArgs e)
-        {
-            SalvarDocumento("Senha Gmail", TextBoxGM.Text.Trim());
-            CarregarDocumentos();// Corrigido de TextBoxRG para TextBoxGM
-        }
-        protected void ButtonSaveHOT_Click(object sender, EventArgs e)
-        {
-            SalvarDocumento("Senha Hotmail", TextBoxHOT.Text.Trim());
-            CarregarDocumentos();// Corrigido de TextBoxRG para TextBoxHOT
-        }
-
-
-        // Eventos dos botões deletar
-        protected void ButtonDeleteRG_Click(object sender, EventArgs e) => DeletarDocumento("RG", TextBoxRG);
-        protected void ButtonDeleteCPF_Click(object sender, EventArgs e) => DeletarDocumento("CPF", TextBoxCPF);
-        protected void ButtonDeleteTEL_Click(object sender, EventArgs e) => DeletarDocumento("Telefone", TextBoxTEL);
-        protected void ButtonDeleteGM_Click(object sender, EventArgs e) => DeletarDocumento("Senha Gmail", TextBoxGM);
-        protected void ButtonDeleteHOT_Click(object sender, EventArgs e) => DeletarDocumento("Senha Hotmail", TextBoxHOT);
+       
 
         // Função para deletar documentos
         private void DeletarDocumento(string tipoDocumento, TextBox textBox)
@@ -246,6 +178,17 @@ private void SalvarDocumento(string tipoDocumento, string conteudo)
                 // Atualizar a lista de documentos
                 CarregarDocumentos();
 
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT DocumentoID, TipoDocumento, Conteudo FROM Documentos";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        rptDocuments.DataSource = reader;
+                        rptDocuments.DataBind();
+                    }
+                }
                 // Exibir mensagem de sucesso
                 lblMessage.Text = tipoDocumento + " deletado com sucesso!";
                 lblMessage.ForeColor = System.Drawing.Color.Green;
@@ -258,98 +201,28 @@ private void SalvarDocumento(string tipoDocumento, string conteudo)
             }
         }
 
-        protected void LinkButton1_Click(object sender, EventArgs e)
+
+
+
+
+
+        // Método para carregar os documentos
+
+
+
+
+        protected void btnEditar_Click(object sender, EventArgs e)
         {
-            PanelRG.Visible = true;
-            EsconderTodosOsPanelsExceto("PanelRG");
+            ImageButton btn = (ImageButton)sender;
+            RepeaterItem item = (RepeaterItem)btn.NamingContainer;
+
+            TextBox txtDynamicContent = (TextBox)item.FindControl("txtDynamicContent");
+
+            // Torna a TextBox editável
+            txtDynamicContent.ReadOnly = false;
+            txtDynamicContent.Focus(); // Foca na TextBox para começar a edição
         }
 
-        protected void LinkButton2_Click(object sender, EventArgs e)
-        {
-            PanelCPF.Visible = true;
-            EsconderTodosOsPanelsExceto("PanelCPF");
-        }
-
-        protected void LinkButton3_Click(object sender, EventArgs e)
-        {
-            PanelTEL.Visible = true;
-            EsconderTodosOsPanelsExceto("PanelTEL");
-        }
-
-        protected void LinkButton4_Click(object sender, EventArgs e)
-        {
-            PanelGm.Visible = true;
-            EsconderTodosOsPanelsExceto("PanelGm");
-        }
-
-        protected void LinkButton5_Click(object sender, EventArgs e)
-        {
-            Panelhot.Visible = true;
-            EsconderTodosOsPanelsExceto("Panelhot");
-        }
-
-        private void EsconderTodosOsPanelsExceto(string panelID)
-        {
-            // Liste todos os IDs dos seus panels
-            string[] panelIds = { "PanelRG", "PanelCPF", "PanelTEL", "PanelGm", "Panelhot", "PanelAddDocument" };
-
-            foreach (string id in panelIds)
-            {
-                if (id == panelID)
-                {
-                    FindControl(id).Visible = true;
-                }
-                else
-                {
-                    FindControl(id).Visible = false;
-                }
-            }
-        }
-
-        protected void LinkButtonAddDocument_Click(object sender, EventArgs e)
-        {
-            PanelAddDocument.Visible = true;
-            EsconderTodosOsPanelsExceto("PanelAddDocument");
-        }
-
-        protected void lnkDocName_Click(object sender, EventArgs e)
-        {
-            // Fecha todos os painéis
-            FecharTodosOsPaineis();
-
-            // Obtém o botão clicado
-            LinkButton lnkDocName = (LinkButton)sender;
-
-            // Obtém o item do repeater correspondente ao botão clicado
-            RepeaterItem item = (RepeaterItem)lnkDocName.NamingContainer;
-
-            // Obtém o painel correspondente
-            Panel panelDocument = (Panel)item.FindControl("panelDocument");
-
-            if (panelDocument != null)
-            {
-                panelDocument.Visible = !panelDocument.Visible; // Alterna a visibilidade do painel
-            }
-        }
-
-        private void FecharTodosOsPaineis()
-        {
-            PanelRG.Visible = false;
-            PanelCPF.Visible = false;
-            PanelTEL.Visible = false;
-            PanelGm.Visible = false;
-            Panelhot.Visible = false;
-
-            // Fechar os painéis dos documentos adicionados dinamicamente
-            foreach (RepeaterItem item in rptDocuments.Items)
-            {
-                Panel panelDocument = (Panel)item.FindControl("panelDocument");
-                if (panelDocument != null)
-                {
-                    panelDocument.Visible = false;
-                }
-            }
-        }
 
         protected void btnSaveDynamic_Click(object sender, EventArgs e)
         {
@@ -358,8 +231,7 @@ private void SalvarDocumento(string tipoDocumento, string conteudo)
 
             // Encontre o item do repeater correspondente ao botão clicado
             RepeaterItem item = (RepeaterItem)btn.NamingContainer;
-            Panel panel = (Panel)item.FindControl("panelDocument");
-            TextBox txtContent = (TextBox)panel.FindControl("txtDynamicContent");
+            TextBox txtContent = (TextBox)item.FindControl("txtDynamicContent");
 
             if (txtContent != null)
             {
@@ -400,7 +272,7 @@ private void SalvarDocumento(string tipoDocumento, string conteudo)
         protected void btnDeleteDynamic_Click(object sender, EventArgs e)
         {
             // Obtém o botão que foi clicado
-            Button btnDelete = (Button)sender;
+            ImageButton btnDelete = (ImageButton)sender;
 
             // Obtém o item do repeater correspondente ao botão clicado
             RepeaterItem item = (RepeaterItem)btnDelete.NamingContainer;
@@ -443,7 +315,7 @@ private void SalvarDocumento(string tipoDocumento, string conteudo)
 
         protected void ButtonTrash_Click(object sender, EventArgs e)
         {
-            LinkButton btn = (LinkButton)sender;
+            ImageButton btn = (ImageButton)sender;
             string tipoDocumento = btn.CommandArgument;
 
             int documentoID = ObterDocumentoID(tipoDocumento);
@@ -455,7 +327,7 @@ private void SalvarDocumento(string tipoDocumento, string conteudo)
 
         protected void btnTrashDynamic_Click(object sender, EventArgs e)
         {
-            LinkButton btn = (LinkButton)sender;
+            ImageButton btn = (ImageButton)sender;
             int documentoID = Convert.ToInt32(btn.CommandArgument);
 
             MoverParaLixeira(documentoID);
