@@ -1,18 +1,43 @@
-﻿&nbsp;<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Porta_Memória.WebForm1" %><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head runat="server"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Página Inicial</title>
+&nbsp;<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Porta_Memória.WebForm1" %><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head runat="server"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    
+    <title>Página Inicial</title>
+    
     <script type="text/javascript">
-    function refreshPage() {
-        window.location.reload();
-    }
-</script>
+        function refreshPage() {
+            window.location.reload();
+        }
+    </script>
 
     <style>
         /* Cores */
         :root {
-            --main-blue: #0066CC;
+            --main-blue: #00AAFF;
+            --primary-blue: #0066CC;
+            --baby-blue: #BAE3F8;
             --light-blue: #E6F0FF;
             --text-color: #333;
-            --border-color: #0066CC; /* Adicionando uma variável para a cor da borda */
+            --white-color: #FFFFFF;
+            --red-color: #FF0400;
+            --border-color: #0066CC; 
+            
+            /* Modo Escuro */
+
+            --main-blue-dark: #004465;
+            --primary-blue-dark: #002952;
+            --baby-blue-dark: #BAE3F8;
+            --light-blue-dark: #3C4552;
+            --text-color-dark: #D0D0D0;
+            --white-color-dark: #000000;
+            --red-color-dark: #C00F0C;
+            --border-color-dark: #002952;
         }
+
+        body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Garante que a página ocupe toda a altura */
+    overflow-x: hidden; /* Evita rolagem horizontal */
+}
 
         body {
             font-family: Arial, sans-serif;
@@ -22,34 +47,36 @@
             padding: 0;
         }
 
-        @media (max-width: 600px) {
-   .container {
-       width: 100%;
-       padding: 10px;
-   }
-   .header img {
-       height: 50px;
-   }
-   .image-bar img {
-       height: 30px;
-   }
-}
-
-
-        .container {
-            width: 90%;
-            margin: 0 auto;
-            max-width: 1000px; /* Define uma largura máxima para telas grandes */
+        body.dark-mode {
+            background-color: var(--light-blue-dark);
+            color: var(--text-color-dark);
+            
         }
+
+        .container{
+            object-position: initial;
+            margin-top: -20px;
+            background-color:var(--white-color);
+        }
+
+        .container.dark-mode{
+            background-color:var(--white-color-dark);
+        }
+        
 
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between; /* Garante que os itens sejam distribuídos com espaço entre eles */
             padding: 20px;
-            background-color: #fff;
+            object-position: initial;
+            background-color: var(--white-color);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             height: 60px;
+        }
+
+        .header.dark-mode {         
+            background-color: lightgray;
         }
 
         .header .logo-container {
@@ -74,11 +101,17 @@
             display: flex;
             justify-content: center;
             gap: 50px; /* Espaço entre as imagens */
+            margin-bottom: 10px;
             padding: 10px 0;
-            background-color: var(--main-blue);
+            background: linear-gradient(45deg, var(--main-blue), var(--primary-blue));
             border-bottom: 2px solid var(--border-color); /* Borda inferior para separar da área do cabeçalho */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra leve para destacar */
             height: 40px;
+        }
+
+        .image-bar.dark-mode{
+            background: linear-gradient(45deg, var(--main-blue-dark), var(--baby-blue-dark));
+            border-bottom: 2px solid var(--border-color-dark); /* Borda inferior para separar da área do cabeçalho */
         }
 
         .image-bar img { /* Seleciona todas as imagens dentro da barra de imagem */
@@ -91,74 +124,211 @@
 }
 
 .hover-effect:hover {
-    background-color: rgba(255, 255, 255, 0.7); /* Fundo branco semi-transparente */
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 8px; /* Bordas arredondadas */
     padding: 2px; /* Adiciona espaçamento interno para a imagem */
     transform: scale(1.1); /* Aumenta o tamanho em 10% durante o hover */
 }
 
-        .documents {
-            margin-top: 20px;
-        }
-
-        .documents .document-item {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            background-color: #fff;
-            border-radius: 8px; /* Bordas arredondadas para um visual mais moderno */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-        }
-
-        .documents .document-item a {
-            font-size: 18px;
-            color: var(--main-blue);
-            text-decoration: none;
-        }
-
-        .documents .document-item a:hover {
-            text-decoration: underline;
-        }
-
-        .panel-content {
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            background-color: #fff;
-            color: var(--text-color);
-            border-radius: 4px; /* Bordas arredondadas para uniformidade */
-        }
-
-        .panel-content label {
-            color: var(--main-blue);
-        }
-
-        .panel-content img {
-            max-width: 100%;
-        }
-
-        .btnTrashDoc {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    text-decoration: none;
+.document-title{
+    margin-left: 10px;
 }
 
-        .footer {
-            text-align: center;
-            background-color: var(--main-blue);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            height: 60px;
-            margin-top: 20px;
+
+        .documents {
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--light-blue);
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+        .documents.dark-mode {
+    background-color: var(--light-blue-dark);
+}
+
+
+        .document-item {
+    width: 450px; /* Reduzido para 45% para caber melhor em duas colunas */
+    margin: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    background-color: var(--white-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+        .document-item.dark-mode {
+    border: 1px solid var(--border-color-dark);
+    background-color: var(--white-color-dark);
+}
+
+        .document-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra mais intensa ao passar o mouse */
+}
+
+        .document-item a {
+    font-size: 20px;
+    color: var(--main-blue);
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 1;
+}
+
+        .document-item a.dark-mode {
+    color: var(--main-blue-dark);
+}
+
+.document-item a:hover {
+    text-decoration: underline;
+}
+
+.btnTopDoc{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: -25px;
+        margin-bottom: 10px;
+}
+
+#ButtonAddDoc {
+    position: relative;
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#ButtonAddDoc.dark-mode {
+    background-color: #3D793F;
+    color: black;
+}
+
+.AddDoc {
+    justify-content: flex-start; /* Garantir que os documentos comecem à esquerda */
+}
+
+.document-box {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.document-box.dark-mode {
+    background-color: #3C4552;
+}
+
+        .inputTextBox {
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+        .inputTextBoxConteudoDoc{
+            height: 40vh;
         }
 
+        .btnToggleVisibility{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+       
+        
+
+        .document-item {
+    flex: 1 1 300px; /* Itens flexíveis com largura mínima de 300px */
+    max-width: 300px; /* Impede que os itens cresçam acima de 300px */
+    height: auto; /* Permite que o tamanho seja ajustado conforme o conteúdo */
+    box-sizing: border-box;
+}
+
+        .DocumentTextBox{
+
+            margin-top: 10px;
+            height: 40vh;
+        }
+/* Estilo para os botões */
+.btnSaveDoc {
+    padding: 5px 10px;
+    margin-right: 5px;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.btnSaveDoc.dark-mode {
+    padding: 5px 10px;
+    margin-right: 5px;
+    background-color: var(--primary-blue-dark);
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+
+.btnTrashDoc {
+    object-position: center;
+    height: 6vh;
+    margin-bottom: -1.5vh;
+}
+
+
+
+
+        .footer {
+            margin-top: 10px;
+            margin-bottom: -5%;
+            background: linear-gradient(45deg, var(--baby-blue), var(--main-blue));
+    padding: 20px;
+    background-color: var(--baby-blue);
+    color: var(--text-color);
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+         .footer.dark-mode {
+            
+    background: linear-gradient(45deg, var(--baby-blue-dark), var(--main-blue-dark));
+    background-color: var(--baby-blue-dark);
+    color: var(--text-color-dark);
+}
         
         .auto-style6 {
             font-family: Impact;
             font-size: small;
-            background-color: #0066CC;
+            font-style: italic, oblique;
+            background-color: none;
             text-align: center;
             height: 60px;
         }
@@ -170,32 +340,135 @@
         }
 
         /* Oculta o conteúdo do dropdown inicialmente */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            top: 18%;  /* Alinha diretamente abaixo do botão */
-            right: 0%;
-        }
+.dropdown {
+  position: relative;
+  top: 30%;
+  display: inline-block;
+  cursor: pointer;
 
-        /* Estilo dos botões dentro do dropdown */
-        .dropdown-content button {
-            background-color: white;
-            color: black;
-            padding: 12px 16px;
-            text-align: left;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
+}
 
-        /* Estilo do botão quando o mouse passa por cima */
-        .dropdown-content button:hover {
-            background-color: #f1f1f1;
-        }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--white-color);
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  right: 0;
+
+}
+
+.dropdown-content.dark-mode {
+  background-color: var(--white-color-dark);
+
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: var(--text-color);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a.dark-mode {
+  color: var(--text-color-dark);
+}
+
+.dropdown-content a:hover {background-color: var(--light-blue)}
+
+.dropdown-content a:hover.dark-mode {background-color: var(--light-blue-dark)}
+
+
+#btnLogout:hover{
+    background: var(--red-color);
+}
+
+#btnLogout:hover.dark-mode{
+    background: var(--red-color-dark);
+}
+
+.document-title{
+    font-size: x-large;
+}
+
+.password-mode {
+    color: transparent; /* Torna o texto invisível */
+    text-shadow: 0 0 0 black; /* Cria a ilusão de bolinhas */
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider.dark-mode {
+    background-color: #545454;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.slider:before.dark-mode {
+    background-color: black;
+}
+
+input:checked + .slider {
+    background-color: var(--main-blue);
+}
+
+input:checked + .slider.dark-mode {
+    background-color: var(--main-blue-dark);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-dark-mode {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.toggle-dark-mode span {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #333;
+}
     </style>
 
     <script>
@@ -217,7 +490,58 @@
                 }
             }
         }
+
+        // Função para alternar visibilidade da senha
+        function toggleVisibility(button) {
+            var textBox = button.previousElementSibling; // Seleciona a TextBox que está antes do botão
+            var isPasswordMode = textBox.getAttribute("type") === "password"; // Verifica se o tipo atual é 'password'
+
+            if (isPasswordMode) {
+                textBox.setAttribute("type", "text"); // Altera para texto normal
+                button.src = "~/Imagens/olho-vermelho.png"; // Ícone do olho aberto
+            } else {
+                textBox.setAttribute("type", "password"); // Altera para modo senha
+                button.src = "~/Imagens/olho-aberto.png"; // Ícone do olho fechado
+            }
+        }
+
+        // Função para alternar entre dark mode e light mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode'); // Alterna o dark-mode no body
+
+            // Seleciona todos os elementos que têm a classe modificada no dark mode
+            const elementsToToggle = document.querySelectorAll('.header, .image-bar, .documents, .document-item, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
+            elementsToToggle.forEach((element) => {
+                element.classList.toggle('dark-mode'); // Alterna a classe dark-mode em todos os elementos
+            });
+
+            // Armazenar a preferência no localStorage
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        }
+
+        // Verificar o estado do dark mode ao carregar a página
+        window.onload = function () {
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'enabled') {
+                document.body.classList.add('dark-mode');  // Habilitar dark mode se já estiver ativado
+
+                // Selecionar todos os elementos e adicionar a classe dark-mode
+                const elementsToToggle = document.querySelectorAll('.header, .image-bar, .documents, .document-item, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
+                elementsToToggle.forEach((element) => {
+                    element.classList.add('dark-mode');
+                });
+
+                // Atualizar o estado do switch (se estiver usando algum)
+                if (document.getElementById("darkModeSwitch")) {
+                    document.getElementById("darkModeSwitch").checked = true;
+                }
+            }
+        }
     </script>
+
+   
+
 
 </head>
 <body>
@@ -237,19 +561,38 @@
             ImageUrl="https://cdn-icons-png.flaticon.com/512/149/149071.png"
             OnClientClick="toggleDropdown(); return false;" />
                 </div>
-                <div id="dropdown-content" class="dropdown-content">
-        <asp:Button ID="btnLogout" runat="server" Text="Logout" OnClick="btnLogout_Click" />
-    </div>
-            </div>
+
+        <div class="dropdown">
+                <div id="dropdown-content" class="dropdown-content" onclick="event.stopPropagation();">
+
+                    <a> sla1 </a>
+
+                    <div class="toggle-dark-mode">
+    <label class="switch">
+        <input type="checkbox" id="darkModeSwitch" onclick="toggleDarkMode()">
+        <span class="slider"></span>
+    </label>
+    <span>Modo Escuro</span>
+</div>
+
+                    <asp:LinkButton ID="btnTrocarConta" runat="server" OnClick="btnLogout_Click" CssClass="a">
+                            Trocar de Conta
+                    </asp:LinkButton>
+
+                    <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" CssClass="logout-button">
+                            Logout
+                    </asp:LinkButton>
+
+                </div>            
+        </div>
+  </div>
                   
-
-
             <div class="image-bar">
                 <!-- ImageButton 2: Imagem de chave -->
                 <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" CssClass="hover-effect" OnClientClick="window.location.href='/Index.aspx'; return false;" />
 
                 <!-- ImageButton 3: Imagem de caderno de anotações -->
-                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl= "~/Imagens/wirte.png" CssClass="hover-effect" />
+                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl= "~/Imagens/wirte.png" CssClass="hover-effect" OnClientClick="window.location.href='/BlocoDeNotas.aspx'; return false;" />
 
 
                 <!-- ImageButton 4: Imagem de senha -->
@@ -259,109 +602,50 @@
 <asp:ImageButton ID="ImageButton5" runat="server" ImageUrl="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" CssClass="hover-effect" OnClientClick="window.location.href='/Lixeira.aspx'; return false;" />
             </div>
 
-            
+            <asp:Label ID="Label7" runat="server" Text="Documentos" CssClass="document-title" ForeColor="#000099" />
+
             <div class="documents">
-                <asp:Label ID="Label7" runat="server" Text="Documentos" CssClass="document-title" ForeColor="#000099" />
-               <div class="document-item">
-    <asp:LinkButton ID="LinkButton1" runat="server" OnClick="LinkButton1_Click">Meu RG</asp:LinkButton>
-    <asp:Panel ID="PanelRG" runat="server" Visible="False" CssClass="panel-content rg-panel">
-        <asp:Label ID="Label2" runat="server" Text="RG:"></asp:Label>
-        <asp:TextBox ID="TextBoxRG" runat="server"></asp:TextBox>
-        <asp:Button ID="ButtonSaveRG" runat="server" Text="Salvar" OnClick="ButtonSaveRG_Click" />
-        <asp:Button ID="ButtonDeleteRG" runat="server" Text="Excluir" OnClick="ButtonDeleteRG_Click" CssClass="btnDeleteDoc" />
-        <!-- Botão de lixeira -->
-        <!--<asp:LinkButton ID="ButtonTrashRG" runat="server" Text="Lixeira" CommandArgument="RG" OnClick="ButtonTrash_Click" CssClass="btnTrashDoc" />-->
-    </asp:Panel>
+
+                <div class="document-item AddDoc">
+        <asp:TextBox ID="TextBoxNomeDoc" runat="server" CssClass="inputTextBox" Placeholder="Nome do Documento"></asp:TextBox>
+        <asp:TextBox ID="TextBoxConteudoDoc" runat="server" TextMode="MultiLine" CssClass="inputTextBox inputTextBoxConteudoDoc" Placeholder="Conteúdo do Documento"></asp:TextBox>
+        <asp:Button ID="ButtonAddDoc" runat="server" Text="Adicionar Documento" OnClick="ButtonAddDoc_Click" CssClass="btnAddDoc" />
+    </div>
+
+            <asp:Repeater ID="rptDocuments" runat="server">
+                <ItemTemplate>
+                    <div class="document-item">
+            <asp:LinkButton ID="lnkDocName" runat="server"  Text='<%# Eval("TipoDocumento") %>' CommandArgument='<%# Eval("DocumentoID") %>'></asp:LinkButton>
+                        
+                        <div class="btnTopDoc">
+            <asp:ImageButton ID="btnToggleVisibility" runat="server" ImageUrl="~/Imagens/olho-aberto.png" CssClass="btnToggleVisibility" OnClientClick="toggleVisibility(this); return false;" />
+                        <asp:ImageButton ID="btnEditar" ImageUrl="~/Imagens/editar.png" runat="server" CssClass="btnToggleVisibility" OnClick="btnEditar_Click">
+            </asp:ImageButton>
+                            </div>
+            <asp:TextBox ID="txtDynamicContent" runat="server" TextMode="MultiLine" ReadOnly="True" CssClass="inputTextBox DocumentTextBox" Text='<%# Eval("Conteudo") %>' />
+            
+        <div class="btnsDocs">
+            <asp:Button ID="btnSaveDynamic" runat="server" Text="Salvar" CommandArgument='<%# Eval("DocumentoID") %>' OnClick="btnSaveDynamic_Click" CssClass="btnSaveDoc" />
+            <asp:ImageButton ID="btnTrashDynamic" runat="server" ImageUrl="~/Imagens/delete.png" CommandArgument='<%# Eval("DocumentoID") %>' OnClick="btnTrashDynamic_Click" CssClass="btnTrashDoc" />
+        </div>
+        </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        
+
+    <!-- Formulário de adição de novo documento -->
+    
 </div>
 
-<div class="document-item">
-    <asp:LinkButton ID="LinkButton2" runat="server" OnClick="LinkButton2_Click">Meu CPF</asp:LinkButton>
-    <asp:Panel ID="PanelCPF" runat="server" Visible="False" CssClass="panel-content">
-        <asp:Label ID="Label3" runat="server" Text="CPF"></asp:Label>
-        <asp:TextBox ID="TextBoxCPF" runat="server"></asp:TextBox>
-        <asp:Button ID="ButtonSaveCPF" runat="server" Text="Salvar" OnClick="ButtonSaveCPF_Click" />
-        <asp:Button ID="ButtonDeleteCPF" runat="server" Text="Excluir" OnClick="ButtonDeleteCPF_Click" CssClass="btnDeleteDoc" />
-        <!-- Botão de lixeira -->
-        <!--<asp:LinkButton ID="ButtonTrashCPF" runat="server" Text="Lixeira" CommandArgument="CPF" OnClick="ButtonTrash_Click" CssClass="btnTrashDoc" />-->
-    </asp:Panel>
-</div>
 
-<div class="document-item">
-    <asp:LinkButton ID="LinkButton3" runat="server" OnClick="LinkButton3_Click">Telefone</asp:LinkButton>
-    <asp:Panel ID="PanelTEL" runat="server" Visible="False" CssClass="panel-content">
-        <asp:Label ID="Label5" runat="server" Text="Telefone"></asp:Label>
-        <asp:TextBox ID="TextBoxTEL" runat="server"></asp:TextBox>
-        <asp:Button ID="ButtonSaveTEL" runat="server" Text="Salvar" OnClick="ButtonSaveTEL_Click" />
-        <asp:Button ID="ButtonDeleteTEL" runat="server" Text="Excluir" OnClick="ButtonDeleteTEL_Click" CssClass="btnDeleteDoc" />
-        <!--<asp:LinkButton ID="ButtonTrashTEL" runat="server" Text="Lixeira" CommandArgument="Telefone" OnClick="ButtonTrash_Click" CssClass="btnTrashDoc" />-->
-    </asp:Panel>
-</div>
-
-<div class="document-item">
-    <asp:LinkButton ID="LinkButton4" runat="server" OnClick="LinkButton4_Click">Senha Gmail</asp:LinkButton>
-    <asp:Panel ID="PanelGm" runat="server" Visible="False" CssClass="panel-content">
-        <asp:Label ID="Label6" runat="server" Text="Senha Gmail"></asp:Label>
-        <asp:TextBox ID="TextBoxGM" runat="server"></asp:TextBox>
-        <asp:Button ID="ButtonSaveGM" runat="server" Text="Salvar" OnClick="ButtonSaveGM_Click" />
-        <asp:Button ID="ButtonDeleteGM" runat="server" Text="Excluir" OnClick="ButtonDeleteGM_Click" CssClass="btnDeleteDoc" />
-        <!--<asp:LinkButton ID="ButtonTrashGM" runat="server" Text="Lixeira" CommandArgument="Gmail" OnClick="ButtonTrash_Click" CssClass="btnTrashDoc" />-->
-    </asp:Panel>
-</div>
-
-                <div class="document-item">
-    <asp:LinkButton ID="LinkButton5" runat="server" OnClick="LinkButton5_Click">Senha Hotmail</asp:LinkButton>
-    <asp:Panel ID="Panelhot" runat="server" Visible="False" CssClass="panel-content">
-        <asp:Label ID="Label4" runat="server" Text="Senha Hotmail"></asp:Label>
-        <asp:TextBox ID="TextBoxHOT" runat="server"></asp:TextBox>
-        <asp:Button ID="ButtonSaveHOT" runat="server" Text="Salvar" OnClick="ButtonSaveHOT_Click" />
-        <asp:Button ID="ButtonDeleteHOT" runat="server" Text="Excluir" OnClick="ButtonDeleteHOT_Click" CssClass="btnDeleteDoc" />
-        <!-- <asp:LinkButton ID="ButtonTrashHOT" runat="server" Text="Lixeira" CommandArgument="Hotmail" OnClick="ButtonTrash_Click" CssClass="btnTrashDoc" /> -->
-    </asp:Panel>
-</div>
-             <asp:Panel ID="PanelDocuments" runat="server">
-    <asp:Repeater ID="rptDocuments" runat="server">
-        <ItemTemplate>
-            <div class="document-item">
-                <asp:LinkButton ID="lnkDocName" runat="server" Text='<%# Eval("TipoDocumento") %>' CommandArgument='<%# Eval("DocumentoID") %>' OnClick="lnkDocName_Click"></asp:LinkButton>
-                <asp:Panel ID="panelDocument" runat="server" CssClass="panel-content" Visible="false">
-                    <asp:TextBox ID="txtDynamicContent" runat="server" Text='<%# Eval("Conteudo") %>' CssClass="inputTextBox" />
-                    <asp:Button ID="btnSaveDynamic" runat="server" Text="Salvar" CommandArgument='<%# Eval("DocumentoID") %>' OnClick="btnSaveDynamic_Click" CssClass="btnSaveDoc" />
-                    <asp:Button ID="btnDeleteDynamic" runat="server" Text="Excluir" CommandArgument='<%# Eval("DocumentoID") %>' OnClick="btnDeleteDynamic_Click" CssClass="btnDeleteDoc" />
-                    <!-- Botão de lixeira -->
-                    <asp:LinkButton ID="btnTrashDynamic" runat="server" Text="Lixeira" CommandArgument='<%# Eval("DocumentoID") %>' OnClick="btnTrashDynamic_Click" CssClass="btnTrashDoc" />
-                </asp:Panel>
-            </div>
-        </ItemTemplate>
-    </asp:Repeater>
-</asp:Panel>
-
-                <!-- Formulário para adicionar novo documento -->
-                <div class="document-item">
-                    <asp:LinkButton ID="LinkButtonAddDocument" runat="server" OnClick="LinkButtonAddDocument_Click">Adicionar Documento</asp:LinkButton>
-                    <asp:Panel ID="PanelAddDocument" runat="server" Visible="false">
-                        <h2>Adicionar Documento</h2>
-                        <asp:TextBox ID="TextBoxNomeDoc" runat="server" CssClass="inputTextBox" Placeholder="Nome do Documento"></asp:TextBox>
-                        <asp:TextBox ID="TextBoxConteudoDoc" runat="server" TextMode="MultiLine" CssClass="inputTextBox" Placeholder="Conteúdo do Documento"></asp:TextBox>
-                        <asp:Button ID="ButtonAddDoc" runat="server" Text="Adicionar Documento" OnClick="ButtonAddDoc_Click" CssClass="btnAddDoc" />
-                    </asp:Panel>
-                    <br />
-                    <br />
-                </div>
-            </div>
             <div class="footer">
                         <br />
-                        <span class="auto-style6" style="font-family: Arial, sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">
+                        <span class="auto-style6" style="font-family: Arial, sans-serif; font-style: italic; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 700; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">
                         ©Porta Memória, all rights reserved.</span>
                     </div>
                 <br />
         </div>
         </ContentTemplate>
-    <Triggers>
-        <asp:AsyncPostBackTrigger ControlID="ButtonSaveRG" EventName="Click" />
-        <asp:AsyncPostBackTrigger ControlID="ButtonDeleteRG" EventName="Click" />
-        <asp:AsyncPostBackTrigger ControlID="ButtonSaveCPF" EventName="Click" />
-        <asp:AsyncPostBackTrigger ControlID="ButtonDeleteCPF" EventName="Click" />
-    </Triggers>
 </asp:UpdatePanel>
         
     </form>
