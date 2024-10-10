@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Lixeira.aspx.cs" Inherits="Porta_Memória.Lixeira" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Lixeira.aspx.cs" Inherits="Porta_Memória.Lixeira" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -6,17 +6,34 @@
     <title>Lixeira</title>
     <style>
         /* Estilos gerais */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0faff;
-    margin: 0;
-    padding: 0;
+    body {
+            background-color: #FFF;
+            font-family: Calibri;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
 }
 
-form {
-    margin: 0;
-    padding: 20px;
+    form {
+            background-color: #00AAFF;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 220vh;
+            height: 90vh;
+            box-sizing: border-box;
+            text-align: center;
 }
+
+    h2{
+        color: #fff;
+        margin-top: -15px;
+        font-size: 32px;
+    }
 
 div.document-item {
     border: 1px solid #00aaff;
@@ -29,7 +46,7 @@ div.document-item {
 /* Títulos dos documentos */
 .document-item .document-title {
     font-size: 18px;
-    color: #0077cc;
+    color: black;
     font-weight: bold;
     margin-right: 20px;
 }
@@ -57,6 +74,9 @@ div.document-item {
     opacity: 0.9;
 }
 
+span{
+    color: black;
+}
 /* Link do botão no canto superior esquerdo */
 .icon-back {
     position: absolute;
@@ -85,12 +105,13 @@ div.document-item {
 </a>
 
     <form id="form1" runat="server">
+       <h2>Lixeira</h2>
         <div>
             <asp:Repeater ID="rptLixeira" runat="server">
                 <ItemTemplate>
                     <div class="document-item">
                         <asp:Label ID="lblDocumentTitle" runat="server" Text='<%# Eval("TipoDocumento") %>'></asp:Label>
-                        <asp:LinkButton ID="lnkDeletePermanently" runat="server" CommandArgument='<%# Eval("DocumentoID") %>' CssClass="btnDeleteDoc">
+                        <asp:LinkButton ID="lnkDeletePermanently" runat="server" CommandArgument='<%# Eval("DocumentoID") %>' OnClick="btnDeletePermanently_Click" CssClass="btnDeleteDoc">
                             Excluir Permanentemente
                         </asp:LinkButton>
                         <asp:LinkButton ID="lnkRestore" runat="server" CommandArgument='<%# Eval("DocumentoID") %>' OnClick="btnRestore_Click" CssClass="btnRestoreDoc">
