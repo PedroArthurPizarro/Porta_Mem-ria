@@ -68,15 +68,15 @@
             display: flex;
             align-items: center;
             justify-content: space-between; /* Garante que os itens sejam distribuídos com espaço entre eles */
-            padding: 20px;
+            padding: 25px;
             object-position: initial;
             background-color: var(--white-color);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            height: 60px;
+            height: 40px;
         }
 
         .header.dark-mode {         
-            background-color: lightgray;
+            background-color: var(--white-color-dark);
         }
 
         .header .logo-container {
@@ -110,7 +110,7 @@
         }
 
         .image-bar.dark-mode{
-            background: linear-gradient(45deg, var(--main-blue-dark), var(--baby-blue-dark));
+            background: linear-gradient(45deg, var(--main-blue-dark), var(--primary-blue-dark));
             border-bottom: 2px solid var(--border-color-dark); /* Borda inferior para separar da área do cabeçalho */
         }
 
@@ -518,11 +518,53 @@ input:checked + .slider:before {
             // Armazenar a preferência no localStorage
             const isDarkMode = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-        }
 
-        // Verificar o estado do dark mode ao carregar a página
-        window.onload = function () {
-            const darkMode = localStorage.getItem('darkMode');
+            // Mudar o logotipo dependendo do modo
+            const logoImage = document.getElementById('<%= Image1.ClientID %>');
+            const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>');
+            const imageButton3 = document.getElementById('<%= ImageButton3.ClientID %>');
+            const imageButton4 = document.getElementById('<%= ImageButton4.ClientID %>');
+            const imageButton5 = document.getElementById('<%= ImageButton5.ClientID %>');
+            const edit = document.querySelectorAll('.btnToggleVisibility');
+            const olho = document.querySelectorAll('.btnToggleVisibility');
+            const olho_not = document.querySelectorAll('.btnToggleVisibility');
+
+
+    if (isDarkMode) {
+        logoImage.src = '/Imagens/Porta_Memória_Dark.png';  // Caminho para o logotipo modo escuro
+        imageButton2.src = '/Imagens/cadeado_dark.png';  // Caminho para a imagem do cadeado modo escuro
+        imageButton3.src = '/Imagens/note_dark.png';
+        imageButton4.src = '/Imagens/senha_dark.png';
+        imageButton5.src = '/Imagens/lixeira_dark.png';
+        edit.src = '/Imagens/edit_dark.png';
+        olho.src = '/Imagens/olho_dark.png';
+        olho_not.src = '/Imagens/olho-vermelho_dark.png';
+
+
+    } else {
+        logoImage.src = '/Imagens/Porta_Memória.png';  // Caminho para o logotipo modo claro
+        imageButton2.src = '/Imagens/cadeado.png';  // Caminho para a imagem do cadeado modo claro
+        imageButton3.src = '/Imagens/note.png';
+        imageButton4.src = '/Imagens/senha.png';
+        imageButton5.src = '/Imagens/lixeira.png';
+        edit.src = '/Imagens/edit.png';
+        olho.src = '/Imagens/olho.png';
+        olho_not.src = '/Imagens/olho-vermelho.png';
+    }
+}
+
+// Verificar o estado do dark mode ao carregar a página
+window.onload = function () {
+    const darkMode = localStorage.getItem('darkMode');
+    const logoImage = document.getElementById('<%= Image1.ClientID %>');
+    const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>'); // Pega o ImageButton2 pelo ID
+    const imageButton3 = document.getElementById('<%= ImageButton3.ClientID %>');
+    const imageButton4 = document.getElementById('<%= ImageButton4.ClientID %>');
+    const imageButton5 = document.getElementById('<%= ImageButton5.ClientID %>');
+    const edit = document.querySelectorAll('.btnToggleVisibility');
+    const olho = document.querySelectorAll('.btnToggleVisibility');
+    const olho_not = document.querySelectorAll('.btnToggleVisibility');
+
             if (darkMode === 'enabled') {
                 document.body.classList.add('dark-mode');  // Habilitar dark mode se já estiver ativado
 
@@ -532,17 +574,36 @@ input:checked + .slider:before {
                     element.classList.add('dark-mode');
                 });
 
-                // Atualizar o estado do switch (se estiver usando algum)
-                if (document.getElementById("darkModeSwitch")) {
-                    document.getElementById("darkModeSwitch").checked = true;
-                }
+                // Atualizar o logotipo e ImageButton2 para o modo escuro
+                logoImage.src = '/Imagens/Porta_Memória_Dark.png';
+                imageButton2.src = '/Imagens/cadeado_dark.png';
+                imageButton3.src = '/Imagens/note_dark.png';
+                imageButton4.src = '/Imagens/senha_dark.png';
+                imageButton5.src = '/Imagens/lixeira_dark.png';
+                edit.src = '/Imagens/edit_dark.png';
+                olho.src = '/Imagens/olho_dark.png';
+                olho_not.src = '/Imagens/olho-vermelho_dark.png';
+
+
+            } else {
+                // Atualizar o logotipo e ImageButton2 para o modo claro
+                logoImage.src = '/Imagens/Porta_Memória.png';
+                imageButton2.src = '/Imagens/cadeado.png';
+                imageButton3.src = '/Imagens/note.png';
+                imageButton4.src = '/Imagens/senha.png';
+                imageButton5.src = '/Imagens/lixeira.png';
+                edit.src = '/Imagens/edit.png';
+                olho.src = '/Imagens/olho.png';
+                olho_not.src = '/Imagens/olho-vermelho.png';
             }
-        }
+
+            // Atualizar o estado do switch (se estiver usando algum)
+            if (document.getElementById("darkModeSwitch")) {
+                document.getElementById("darkModeSwitch").checked = (darkMode === 'enabled');
+            }
+        };
+
     </script>
-
-   
-
-
 </head>
 <body>
     <form id="form1" runat="server">
@@ -554,7 +615,7 @@ input:checked + .slider:before {
         <div class="container">
             <div class="header">
                 <div class="logo-container">
-                    <asp:Image ID="Image1" runat="server" ImageUrl="~/Imagens/Porta_Memória_1.png" />
+                    <asp:Image ID="Image1"  runat="server" ImageUrl="~/Imagens/Porta_Memória.png" />
                 </div>
                 <div class="account-settings">
                     <asp:ImageButton ID="UserButton" runat="server" Height="42px" Width="42px"
@@ -589,17 +650,17 @@ input:checked + .slider:before {
                   
             <div class="image-bar">
                 <!-- ImageButton 2: Imagem de chave -->
-                <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" CssClass="hover-effect" OnClientClick="window.location.href='/Index.aspx'; return false;" />
+                <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="/Imagens/cadeado.png" CssClass="hover-effect" OnClientClick="window.location.href='/Index.aspx'; return false;" />
 
                 <!-- ImageButton 3: Imagem de caderno de anotações -->
-                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl= "~/Imagens/wirte.png" CssClass="hover-effect" OnClientClick="window.location.href='/BlocoDeNotas.aspx'; return false;" />
+                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl= "~/Imagens/note.png" CssClass="hover-effect" OnClientClick="window.location.href='/BlocoDeNotas.aspx'; return false;" />
 
 
                 <!-- ImageButton 4: Imagem de senha -->
                 <asp:ImageButton ID="ImageButton4" runat="server" ImageUrl="~/Imagens/senha.png" CssClass="hover-effect" OnClientClick="window.location.href='/GeradorSenha.aspx'; return false;" />
 
                 <!-- ImageButton 5: Imagem de lixeira -->
-<asp:ImageButton ID="ImageButton5" runat="server" ImageUrl="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" CssClass="hover-effect" OnClientClick="window.location.href='/Lixeira.aspx'; return false;" />
+                <asp:ImageButton ID="ImageButton5" runat="server" ImageUrl="/Imagens/note.png" CssClass="hover-effect" OnClientClick="window.location.href='/Lixeira.aspx'; return false;" />
             </div>
 
             <asp:Label ID="Label7" runat="server" Text="Documentos" CssClass="document-title" ForeColor="#000099" />
@@ -618,8 +679,8 @@ input:checked + .slider:before {
             <asp:LinkButton ID="lnkDocName" runat="server"  Text='<%# Eval("TipoDocumento") %>' CommandArgument='<%# Eval("DocumentoID") %>'></asp:LinkButton>
                         
                         <div class="btnTopDoc">
-            <asp:ImageButton ID="btnToggleVisibility" runat="server" ImageUrl="~/Imagens/olho-aberto.png" CssClass="btnToggleVisibility" OnClientClick="toggleVisibility(this); return false;" />
-                        <asp:ImageButton ID="btnEditar" ImageUrl="~/Imagens/editar.png" runat="server" CssClass="btnToggleVisibility" OnClick="btnEditar_Click">
+            <asp:ImageButton ID="btnToggleVisibility" runat="server" ImageUrl="~/Imagens/olho.png" CssClass="btnToggleVisibility" OnClientClick="toggleVisibility(this); return false;" />
+                        <asp:ImageButton ID="btnEditar" ImageUrl="~/Imagens/edit.png" runat="server" CssClass="btnToggleVisibility" OnClick="btnEditar_Click">
             </asp:ImageButton>
                             </div>
             <asp:TextBox ID="txtDynamicContent" runat="server" TextMode="MultiLine" ReadOnly="True" CssClass="inputTextBox DocumentTextBox" Text='<%# Eval("Conteudo") %>' />
@@ -643,7 +704,6 @@ input:checked + .slider:before {
                         <span class="auto-style6" style="font-family: Arial, sans-serif; font-style: italic; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 700; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">
                         ©Porta Memória, all rights reserved.</span>
                     </div>
-                <br />
         </div>
         </ContentTemplate>
 </asp:UpdatePanel>
