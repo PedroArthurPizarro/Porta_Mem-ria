@@ -7,6 +7,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Login</title>
     <style>
+
+        :root {
+            --main-blue: #0066CC;
+            --light-blue: #BAE3F8;
+            --text-color: #333;
+            --border-color: #0066CC;
+        }
+
         body {
             background-color: #FFF;
             font-family: Arial, sans-serif;

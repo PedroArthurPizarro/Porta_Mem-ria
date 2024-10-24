@@ -12,7 +12,6 @@
             font-family: Arial, sans-serif;
             color: #FFFFFF;
             margin: 0;
-            margin-top: auto;
             padding: 0;
             display: flex;
             justify-content: center;
@@ -25,14 +24,25 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 80%; /* Faz com que o formulário ocupe 80% da largura da tela */
+            max-width: 1200px; /* Máximo de 1200px */
             box-sizing: border-box;
-            text-align: center;
         }
 
         h2 {
             color: #00AAFF;
             margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .form-column {
+            flex: 1;
         }
 
         label {
@@ -60,10 +70,11 @@
         }
 
         .button {
-            width: 100%;
+            border-style: none;
+            border-color: inherit;
+            border-width: medium;
             padding: 10px;
             background-color: #00AAFF;
-            border: none;
             border-radius: 5px;
             color: #FFFFFF;
             font-weight: bold;
@@ -74,6 +85,11 @@
 
         .button:hover {
             background-color: #008FCC;
+        }
+
+        #btn-container {
+            text-align: center;
+            margin-top: 20px;
         }
 
         #lblMensagem {
@@ -88,33 +104,43 @@
     <form id="form1" runat="server">
         <div>
             <h2>Cadastro de Novo Usuário</h2>
-            
-            <asp:Label ID="lblNome" runat="server" Text="Nome:"></asp:Label>
-            <asp:TextBox ID="txtNome" runat="server"></asp:TextBox><br />
 
-            <asp:Label ID="lblSobrenome" runat="server" Text="Sobrenome:"></asp:Label>
-            <asp:TextBox ID="txtSobrenome" runat="server"></asp:TextBox><br />
+            <div class="form-container">
+                <div class="form-column">
+                    <asp:Label ID="lblNome" runat="server" Text="Nome:"></asp:Label>
+                    <asp:TextBox ID="txtNome" runat="server"></asp:TextBox>
 
-            <asp:Label ID="lblEmail" runat="server" Text="Email:"></asp:Label>
-            <asp:TextBox ID="txtEmail" runat="server"></asp:TextBox><br />
+                    <asp:Label ID="lblSobrenome" runat="server" Text="Sobrenome:"></asp:Label>
+                    <asp:TextBox ID="txtSobrenome" runat="server"></asp:TextBox>
 
-            <asp:Label ID="lblTelefone" runat="server" Text="Telefone:"></asp:Label>
-            <asp:TextBox ID="txtTelefone" runat="server"></asp:TextBox><br />
+                    <asp:Label ID="lblEmail" runat="server" Text="Email:"></asp:Label>
+                    <asp:TextBox ID="txtEmail" runat="server"></asp:TextBox>
 
-            <asp:Label ID="lblCpf" runat="server" Text="CPF:"></asp:Label>
-            <asp:TextBox ID="txtCpf" runat="server"></asp:TextBox><br />
+                    <asp:Label ID="lblCpf" runat="server" Text="CPF:"></asp:Label>
+                    <asp:TextBox ID="txtCpf" runat="server"></asp:TextBox>
 
-            <asp:Label ID="lblSenha" runat="server" Text="Senha:"></asp:Label>
-            <asp:TextBox ID="txtSenha" runat="server" TextMode="Password"></asp:TextBox><br />
+                </div>
 
-            <asp:Label ID="lblConfirmarSenha" runat="server" Text="Confirmar Senha:"></asp:Label>
-            <asp:TextBox ID="txtConfirmarSenha" runat="server" TextMode="Password" OnTextChanged="txtConfirmarSenha_TextChanged" AutoPostBack="true"></asp:TextBox><br />
+                <div class="form-column">
+                   
+                    <asp:Label ID="lblTelefone" runat="server" Text="Telefone:"></asp:Label>
+                    <asp:TextBox ID="txtTelefone" runat="server"></asp:TextBox>
 
-            <asp:Button ID="btnCadastrar" runat="server" Text="Cadastrar" CssClass="button" OnClick="btnCadastrar_Click" /><br />
+                    <asp:Label ID="lblSenha" runat="server" Text="Senha:"></asp:Label>
+                    <asp:TextBox ID="txtSenha" runat="server" TextMode="Password"></asp:TextBox>
 
-            <h3>
-                <asp:LinkButton ID="LinkButton1" runat="server" ForeColor="White" PostBackUrl="~/Login.aspx">Fazer Login</asp:LinkButton>
-            </h3>
+                    <asp:Label ID="lblConfirmarSenha" runat="server" Text="Confirmar Senha:"></asp:Label>
+                    <asp:TextBox ID="txtConfirmarSenha" runat="server" TextMode="Password" OnTextChanged="txtConfirmarSenha_TextChanged" AutoPostBack="true"></asp:TextBox>
+                   
+                    <asp:Button ID="btnCadastrar" runat="server" Text="Cadastrar" CssClass="button" OnClick="btnCadastrar_Click" Height="46px" Width="451px" />
+                </div>
+            </div>
+
+            <div id="btn-container">
+                <h3>
+                    Já possui cadastro? <asp:LinkButton ID="LinkButton1" runat="server" ForeColor="White" PostBackUrl="~/Login.aspx">Faça Login</asp:LinkButton>
+                </h3>
+            </div>
 
             <asp:Label ID="lblMensagem" runat="server" ForeColor="Red"></asp:Label>
         </div>

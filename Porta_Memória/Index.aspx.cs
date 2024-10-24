@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.UI;
@@ -21,7 +21,9 @@ namespace Porta_Memória
                 if (!IsPostBack)
                 {
                     CarregarDocumentos(); // Carrega os documentos e preenche os campos ao recarregar a página
+
                 }
+
             }
         }
 

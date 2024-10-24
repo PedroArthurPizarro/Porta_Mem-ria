@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Lixeira.aspx.cs" Inherits="Porta_Memória.Lixeira" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Lixeira.aspx.cs" Inherits="Porta_Memória.Lixeira" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

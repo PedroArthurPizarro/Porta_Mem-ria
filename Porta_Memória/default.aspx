@@ -38,7 +38,20 @@
             </asp:GridView>
             <asp:SqlDataSource ID="SqlDataSource2" runat="server" 
     ConnectionString="<%$ ConnectionStrings:Porta_MemóriaDBConnectionString %>" 
-    SelectCommand="SELECT * FROM [Documentos]"></asp:SqlDataSource>
+    SelectCommand="SELECT * FROM [Notas]"></asp:SqlDataSource>
+            <br />
+            <asp:GridView ID="GridView3" runat="server" AutoGenerateColumns="False" DataKeyNames="Id" DataSourceID="SqlDataSource2">
+                <Columns>
+                    <asp:BoundField DataField="Id" HeaderText="Id" InsertVisible="False" ReadOnly="True" SortExpression="Id"></asp:BoundField>
+                    <asp:BoundField DataField="Descricao" HeaderText="Descricao" SortExpression="Descricao"></asp:BoundField>
+                    <asp:BoundField DataField="DataCriacao" HeaderText="DataCriacao" SortExpression="DataCriacao"></asp:BoundField>
+                    <asp:BoundField DataField="DocumentoID" HeaderText="DocumentoID" SortExpression="DocumentoID"></asp:BoundField>
+                    <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status"></asp:BoundField>
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource3" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:Porta_MemóriaDBConnectionString %>" 
+    SelectCommand="SELECT * FROM [Notas]"></asp:SqlDataSource>
         </div>
     </form>
 </body>

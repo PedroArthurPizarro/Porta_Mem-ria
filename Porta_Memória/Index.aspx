@@ -1,4 +1,4 @@
-&nbsp;<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Porta_Memória.WebForm1" %><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head runat="server"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+﻿&nbsp;<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Porta_Memória.WebForm1" %><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head runat="server"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     
     <title>Página Inicial</title>
     
@@ -132,8 +132,12 @@
 
 .document-title{
     margin-left: 10px;
+    color: var(--main-blue)
 }
 
+.document-title.dark-mode{
+    color: var(--white-color)
+}
 
         .documents {
     margin-top: 10px;
@@ -168,7 +172,7 @@
 }
 
         .document-item.dark-mode {
-    border: 1px solid var(--border-color-dark);
+    border: 1px solid var(--white-color);
     background-color: var(--white-color-dark);
 }
 
@@ -187,7 +191,7 @@
 }
 
         .document-item a.dark-mode {
-    color: var(--main-blue-dark);
+    color: var(--white-color);
 }
 
 .document-item a:hover {
@@ -260,8 +264,18 @@
     width: 24px;
     height: 24px;
 }
+
+        .btnEditText{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
        
-        
+        .inputTextBox.dark-mode{
+            background-color: var(--text-color-dark)
+        }
 
         .document-item {
     flex: 1 1 300px; /* Itens flexíveis com largura mínima de 300px */
@@ -271,7 +285,6 @@
 }
 
         .DocumentTextBox{
-
             margin-top: 10px;
             height: 40vh;
         }
@@ -289,8 +302,8 @@
 .btnSaveDoc.dark-mode {
     padding: 5px 10px;
     margin-right: 5px;
-    background-color: var(--primary-blue-dark);
-    color: black;
+    background-color: var(--main-blue-dark);
+    color: var(--text-color-dark);
     border: none;
     cursor: pointer;
     border-radius: 3px;
@@ -302,9 +315,6 @@
     height: 6vh;
     margin-bottom: -1.5vh;
 }
-
-
-
 
         .footer {
             margin-top: 10px;
@@ -318,8 +328,7 @@
 }
 
          .footer.dark-mode {
-            
-    background: linear-gradient(45deg, var(--baby-blue-dark), var(--main-blue-dark));
+    background: linear-gradient(45deg, var(--main-blue-dark), var(--primary-blue-dark));
     background-color: var(--baby-blue-dark);
     color: var(--text-color-dark);
 }
@@ -505,12 +514,11 @@ input:checked + .slider:before {
             }
         }
 
-        // Função para alternar entre dark mode e light mode
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode'); // Alterna o dark-mode no body
 
             // Seleciona todos os elementos que têm a classe modificada no dark mode
-            const elementsToToggle = document.querySelectorAll('.header, .image-bar, .documents, .document-item, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
+            const elementsToToggle = document.querySelectorAll('.header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
             elementsToToggle.forEach((element) => {
                 element.classList.toggle('dark-mode'); // Alterna a classe dark-mode em todos os elementos
             });
@@ -520,90 +528,91 @@ input:checked + .slider:before {
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
 
             // Mudar o logotipo dependendo do modo
+            updateLogoAndIcons(isDarkMode);
+        }
+
+        // Função para atualizar as imagens e ícones conforme o modo escuro/claro
+        function updateLogoAndIcons(isDarkMode) {
             const logoImage = document.getElementById('<%= Image1.ClientID %>');
-            const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>');
-            const imageButton3 = document.getElementById('<%= ImageButton3.ClientID %>');
-            const imageButton4 = document.getElementById('<%= ImageButton4.ClientID %>');
+        const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>');
+        const imageButton3 = document.getElementById('<%= ImageButton3.ClientID %>');
+        const imageButton4 = document.getElementById('<%= ImageButton4.ClientID %>');
             const imageButton5 = document.getElementById('<%= ImageButton5.ClientID %>');
-            const edit = document.querySelectorAll('.btnToggleVisibility');
-            const olho = document.querySelectorAll('.btnToggleVisibility');
-            const olho_not = document.querySelectorAll('.btnToggleVisibility');
+            const editButtons = document.querySelectorAll('.btnEditText');
+            const olhoButtons = document.querySelectorAll('.btnToggleVisibility');
+            const olhoNotButtons = document.querySelectorAll('.btnToggleVisibilityNot');
 
-
-    if (isDarkMode) {
-        logoImage.src = '/Imagens/Porta_Memória_Dark.png';  // Caminho para o logotipo modo escuro
-        imageButton2.src = '/Imagens/cadeado_dark.png';  // Caminho para a imagem do cadeado modo escuro
-        imageButton3.src = '/Imagens/note_dark.png';
-        imageButton4.src = '/Imagens/senha_dark.png';
-        imageButton5.src = '/Imagens/lixeira_dark.png';
-        edit.src = '/Imagens/edit_dark.png';
-        olho.src = '/Imagens/olho_dark.png';
-        olho_not.src = '/Imagens/olho-vermelho_dark.png';
-
-
-    } else {
-        logoImage.src = '/Imagens/Porta_Memória.png';  // Caminho para o logotipo modo claro
-        imageButton2.src = '/Imagens/cadeado.png';  // Caminho para a imagem do cadeado modo claro
-        imageButton3.src = '/Imagens/note.png';
-        imageButton4.src = '/Imagens/senha.png';
-        imageButton5.src = '/Imagens/lixeira.png';
-        edit.src = '/Imagens/edit.png';
-        olho.src = '/Imagens/olho.png';
-        olho_not.src = '/Imagens/olho-vermelho.png';
-    }
-}
-
-// Verificar o estado do dark mode ao carregar a página
-window.onload = function () {
-    const darkMode = localStorage.getItem('darkMode');
-    const logoImage = document.getElementById('<%= Image1.ClientID %>');
-    const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>'); // Pega o ImageButton2 pelo ID
-    const imageButton3 = document.getElementById('<%= ImageButton3.ClientID %>');
-    const imageButton4 = document.getElementById('<%= ImageButton4.ClientID %>');
-    const imageButton5 = document.getElementById('<%= ImageButton5.ClientID %>');
-    const edit = document.querySelectorAll('.btnToggleVisibility');
-    const olho = document.querySelectorAll('.btnToggleVisibility');
-    const olho_not = document.querySelectorAll('.btnToggleVisibility');
-
-            if (darkMode === 'enabled') {
-                document.body.classList.add('dark-mode');  // Habilitar dark mode se já estiver ativado
-
-                // Selecionar todos os elementos e adicionar a classe dark-mode
-                const elementsToToggle = document.querySelectorAll('.header, .image-bar, .documents, .document-item, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
-                elementsToToggle.forEach((element) => {
-                    element.classList.add('dark-mode');
-                });
-
-                // Atualizar o logotipo e ImageButton2 para o modo escuro
-                logoImage.src = '/Imagens/Porta_Memória_Dark.png';
-                imageButton2.src = '/Imagens/cadeado_dark.png';
+            if (isDarkMode) {
+                logoImage.src = '/Imagens/Porta_Memória_Dark.png';  // Caminho para o logotipo modo escuro
+                imageButton2.src = '/Imagens/cadeado_dark.png';  // Caminho para a imagem do cadeado modo escuro
                 imageButton3.src = '/Imagens/note_dark.png';
                 imageButton4.src = '/Imagens/senha_dark.png';
                 imageButton5.src = '/Imagens/lixeira_dark.png';
-                edit.src = '/Imagens/edit_dark.png';
-                olho.src = '/Imagens/olho_dark.png';
-                olho_not.src = '/Imagens/olho-vermelho_dark.png';
 
+                // Atualizar as imagens dos botões de edição
+                editButtons.forEach(button => {
+                    button.src = '/Imagens/edit_dark.png';  // Caminho para a imagem do botão editar no modo escuro
+                });
 
+                // Atualizar as imagens dos botões de "olho"
+                olhoButtons.forEach(button => {
+                    button.src = '/Imagens/olho_dark.png';  // Caminho para a imagem do olho no modo escuro
+                });
+
+                // Atualizar as imagens dos botões de "olho vermelho"
+                olhoNotButtons.forEach(button => {
+                    button.src = '/Imagens/olho-vermelho_dark.png';  // Caminho para a imagem do olho vermelho no modo escuro
+                });
             } else {
-                // Atualizar o logotipo e ImageButton2 para o modo claro
-                logoImage.src = '/Imagens/Porta_Memória.png';
-                imageButton2.src = '/Imagens/cadeado.png';
+                logoImage.src = '/Imagens/Porta_Memória.png';  // Caminho para o logotipo modo claro
+                imageButton2.src = '/Imagens/cadeado.png';  // Caminho para a imagem do cadeado modo claro
                 imageButton3.src = '/Imagens/note.png';
                 imageButton4.src = '/Imagens/senha.png';
                 imageButton5.src = '/Imagens/lixeira.png';
-                edit.src = '/Imagens/edit.png';
-                olho.src = '/Imagens/olho.png';
-                olho_not.src = '/Imagens/olho-vermelho.png';
+
+                // Atualizar as imagens dos botões de edição
+                editButtons.forEach(button => {
+                    button.src = '/Imagens/edit.png';  // Caminho para a imagem do botão editar no modo claro
+                });
+
+                // Atualizar as imagens dos botões de "olho"
+                olhoButtons.forEach(button => {
+                    button.src = '/Imagens/olho.png';  // Caminho para a imagem do olho no modo claro
+                });
+
+                // Atualizar as imagens dos botões de "olho vermelho"
+                olhoNotButtons.forEach(button => {
+                    button.src = '/Imagens/olho-vermelho.png';  // Caminho para a imagem do olho vermelho no modo claro
+                });
+            }
+        }
+
+        // Função para carregar o estado do dark mode ao inicializar a página
+        function loadDarkModeFromLocalStorage() {
+            const darkMode = localStorage.getItem('darkMode');
+            const isDarkMode = (darkMode === 'enabled');
+
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');  // Habilitar dark mode se já estiver ativado
+
+                // Selecionar todos os elementos e adicionar a classe dark-mode
+                const elementsToToggle = document.querySelectorAll('.header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
+                elementsToToggle.forEach((element) => {
+                    element.classList.add('dark-mode');
+                });
             }
 
-            // Atualizar o estado do switch (se estiver usando algum)
-            if (document.getElementById("darkModeSwitch")) {
-                document.getElementById("darkModeSwitch").checked = (darkMode === 'enabled');
-            }
+            // Atualizar logo e ícones de acordo com o modo
+            updateLogoAndIcons(isDarkMode);
+        }
+
+        // Verificar o estado do dark mode ao carregar a página
+        window.onload = function () {
+            loadDarkModeFromLocalStorage(); // Carrega o estado do dark mode do localStorage
         };
 
     </script>
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -653,7 +662,7 @@ window.onload = function () {
                 <asp:ImageButton ID="ImageButton2" runat="server" ImageUrl="/Imagens/cadeado.png" CssClass="hover-effect" OnClientClick="window.location.href='/Index.aspx'; return false;" />
 
                 <!-- ImageButton 3: Imagem de caderno de anotações -->
-                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl= "~/Imagens/note.png" CssClass="hover-effect" OnClientClick="window.location.href='/BlocoDeNotas.aspx'; return false;" />
+                <asp:ImageButton ID="ImageButton3" runat="server" ImageUrl= "~/Imagens/note.png" CssClass="hover-effect" OnClientClick="window.location.href='/Notas.aspx'; return false;" />
 
 
                 <!-- ImageButton 4: Imagem de senha -->
@@ -663,7 +672,7 @@ window.onload = function () {
                 <asp:ImageButton ID="ImageButton5" runat="server" ImageUrl="/Imagens/note.png" CssClass="hover-effect" OnClientClick="window.location.href='/Lixeira.aspx'; return false;" />
             </div>
 
-            <asp:Label ID="Label7" runat="server" Text="Documentos" CssClass="document-title" ForeColor="#000099" />
+            <asp:Label ID="Label7" runat="server" Text="Documentos" CssClass="document-title" />
 
             <div class="documents">
 
@@ -680,7 +689,7 @@ window.onload = function () {
                         
                         <div class="btnTopDoc">
             <asp:ImageButton ID="btnToggleVisibility" runat="server" ImageUrl="~/Imagens/olho.png" CssClass="btnToggleVisibility" OnClientClick="toggleVisibility(this); return false;" />
-                        <asp:ImageButton ID="btnEditar" ImageUrl="~/Imagens/edit.png" runat="server" CssClass="btnToggleVisibility" OnClick="btnEditar_Click">
+                        <asp:ImageButton ID="btnEditar" ImageUrl="~/Imagens/edit.png" runat="server" CssClass="btnEditText" OnClick="btnEditar_Click">
             </asp:ImageButton>
                             </div>
             <asp:TextBox ID="txtDynamicContent" runat="server" TextMode="MultiLine" ReadOnly="True" CssClass="inputTextBox DocumentTextBox" Text='<%# Eval("Conteudo") %>' />
