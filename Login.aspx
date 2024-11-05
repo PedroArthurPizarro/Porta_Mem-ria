@@ -104,7 +104,7 @@
             <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="button" OnClick="btnLogin_Click" />
 
             <h3>
-<asp:LinkButton ID="LinkButton1" runat="server" ForeColor="White" OnClick="LinkButton1_Click" PostBackUrl="~/Cadastro.aspx">Cadastre-se</asp:LinkButton>
+<asp:LinkButton ID="LinkButton1" runat="server" ForeColor="White" PostBackUrl="~/Cadastro.aspx">Cadastre-se</asp:LinkButton>
             </h3>
 
             <asp:Label ID="lblMessage" runat="server" CssClass="failure-text"></asp:Label>

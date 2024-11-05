@@ -17,12 +17,11 @@ namespace Porta_Memória
             {
                 if (!IsPostBack)
                 {
-                    CarregarConteudoBlocoNotas(); // Carrega o conteúdo do bloco de notas ao recarregar a página
+                    CarregarConteudoBlocoNotas();
                 }
             }
         }
 
-        // Método para carregar o conteúdo do bloco de notas do banco de dados
         private void CarregarConteudoBlocoNotas()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["Porta_MemóriaDBConnectionString"].ConnectionString;
@@ -41,11 +40,14 @@ namespace Porta_Memória
                     {
                         TextBoxConteudoDoc.Text = conteudo.ToString();
                     }
+                    else
+                    {
+                        TextBoxConteudoDoc.Text = ""; // Exibir campo vazio se não houver conteúdo salvo
+                    }
                 }
             }
         }
 
-        // Evento para salvar o conteúdo do bloco de notas
         protected void ButtonSalvar_Click(object sender, EventArgs e)
         {
             string conteudoDocumento = TextBoxConteudoDoc.Text.Trim();
@@ -57,14 +59,15 @@ namespace Porta_Memória
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
+                    // Usar MERGE para inserir ou atualizar o conteúdo do bloco de notas
                     string query = "MERGE INTO Documentos AS target " +
                                    "USING (SELECT @UsuarioID AS UsuarioID) AS source " +
-                                   "ON (target.UsuarioID = source.UsuarioID AND target.TipoDocumento = 'BlocoDeNotas') " +
+                                   "ON (target.UsuarioID = source.UsuarioID AND target.TipoDocumento = 'BlocoDeNotas' AND target.Lixeira = 0) " +
                                    "WHEN MATCHED THEN " +
                                    "   UPDATE SET Conteudo = @Conteudo, DataInsercao = GETDATE() " +
                                    "WHEN NOT MATCHED THEN " +
-                                   "   INSERT (UsuarioID, TipoDocumento, Conteudo, DataInsercao) " +
-                                   "   VALUES (@UsuarioID, 'BlocoDeNotas', @Conteudo, GETDATE());";
+                                   "   INSERT (UsuarioID, TipoDocumento, Conteudo, DataInsercao, Lixeira) " +
+                                   "   VALUES (@UsuarioID, 'BlocoDeNotas', @Conteudo, GETDATE(), 0);";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -72,14 +75,21 @@ namespace Porta_Memória
                         cmd.Parameters.AddWithValue("@Conteudo", conteudoDocumento);
 
                         conn.Open();
-                        cmd.ExecuteNonQuery();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            lblMessage.Text = "Conteúdo salvo com sucesso!";
+                            lblMessage.ForeColor = System.Drawing.Color.Green;
+                        }
+                        else
+                        {
+                            lblMessage.Text = "Erro ao salvar conteúdo.";
+                            lblMessage.ForeColor = System.Drawing.Color.Red;
+                        }
                     }
                 }
 
-                lblMessage.Text = "Conteúdo salvo com sucesso!";
-                lblMessage.ForeColor = System.Drawing.Color.Green;
-
-                // Recarregar o conteúdo após salvar
                 CarregarConteudoBlocoNotas();
             }
             else
@@ -87,6 +97,18 @@ namespace Porta_Memória
                 lblMessage.Text = "Por favor, insira conteúdo no bloco de notas.";
                 lblMessage.ForeColor = System.Drawing.Color.Red;
             }
+        }
+
+        protected void ButtonLimpar_Click(object sender, EventArgs e)
+        {
+            TextBoxConteudoDoc.Text = "";
+            lblMessage.Text = "Conteúdo limpo!";
+            lblMessage.ForeColor = System.Drawing.Color.Blue;
+        }
+
+        protected void LinkButtonVoltar_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Index.aspx");
         }
     }
 }

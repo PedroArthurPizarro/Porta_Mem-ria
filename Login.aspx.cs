@@ -6,7 +6,6 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-
 namespace Porta_Memória
 {
     public partial class WebForm2 : System.Web.UI.Page
@@ -45,13 +44,28 @@ namespace Porta_Memória
                         // Definindo o ID do usuário na sessão após o login bem-sucedido
                         Session["UsuarioId"] = dr["USER"];
                         FormsAuthentication.SetAuthCookie(usuario, false);
-                        Response.Redirect("~/Index.aspx"); // Redireciona para a página Index.aspx
+
+                        // Obtendo o tipo do usuário
+                        string tipo = dr["TIPO"].ToString().Trim().ToLower(); // Remove espaços e converte para minúsculo
+
+                        // Verificação do valor de TIPO para debug
+                        lblMessage.Text = $"Tipo de usuário: {tipo}"; // Apenas para verificação
+                        lblMessage.Visible = true;
+
+                        if (tipo == "adm")
+                        {
+                            Response.Redirect("~/ADMIN.aspx"); // Redireciona para a página ADMIN.aspx se for administrador
+                        }
+                        else
+                        {
+                            Response.Redirect("~/Index.aspx"); // Redireciona para a página Index.aspx para outros usuários
+                        }
                     }
                 }
                 else
                 {
                     // Falha na autenticação
-                    lblMessage.Text = "Usuário ou senha inválidos. Por favor tente novamente";
+                    lblMessage.Text = "Usuário ou senha inválidos. Por favor, tente novamente.";
                     lblMessage.Visible = true;
                 }
             }
@@ -69,7 +83,6 @@ namespace Porta_Memória
                 }
             }
         }
-
 
         protected void LinkButton1_Click(object sender, EventArgs e)
         {

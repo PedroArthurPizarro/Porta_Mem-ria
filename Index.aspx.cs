@@ -14,18 +14,29 @@ namespace Porta_Memória
             if (Session["UsuarioId"] == null)
             {
                 Response.Redirect("Login.aspx");
-
             }
             else
             {
                 if (!IsPostBack)
                 {
-                    CarregarDocumentos(); // Carrega os documentos e preenche os campos ao recarregar a página
+                    int usuarioId;
+                    if (int.TryParse(Session["UsuarioId"].ToString(), out usuarioId))
+                    {
+                        string nomeUsuario = ObterNomeUsuario(usuarioId);
 
+                        // Define o texto do Label com o nome do usuário
+                        Label7.Text = $"Documentos de <span style='color: #e1c818;'>{nomeUsuario}</span>";
+                        Label7.Text = Label7.Text.Replace("<span style='color: #e1c818;'>", "<span style='color: #e1c818;'>");
+                    }
+                    else
+                    {
+                        Label7.Text = "Erro ao carregar nome do usuário.";
+                    }
                 }
-
             }
         }
+
+
 
 
         // Carregar documentos do banco de dados
@@ -36,7 +47,9 @@ namespace Porta_Memória
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT DocumentoID, TipoDocumento, Conteudo FROM Documentos WHERE UsuarioID = @UsuarioID AND Lixeira = 0";
+                // Carregar apenas documentos que não são do tipo 'BlocoDeNotas'
+                string query = "SELECT DocumentoID, TipoDocumento, Conteudo FROM Documentos WHERE UsuarioID = @UsuarioID AND TipoDocumento = 'Documento' AND Lixeira = 0";
+
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@UsuarioID", usuarioId);
@@ -52,16 +65,10 @@ namespace Porta_Memória
                     // Associar os dados ao Repeater
                     rptDocuments.DataSource = dataTable;
                     rptDocuments.DataBind();
-
-                    // Preencher os campos correspondentes
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        string tipoDocumento = row["TipoDocumento"].ToString();
-                        string conteudo = row["Conteudo"].ToString();
-                    }
                 }
             }
         }
+
 
         protected void ButtonAddDoc_Click(object sender, EventArgs e)
         {
@@ -287,8 +294,35 @@ namespace Porta_Memória
             }
             return documentoID;
         }
+        private string ObterNomeUsuario(int usuarioId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["Porta_MemóriaDBConnectionString"].ConnectionString;
+            string nomeUsuario = string.Empty;
 
-        protected void btnLogout_Click(object sender, EventArgs e)
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT NOME FROM PortaMemoria WHERE [USER] = @UsuarioID";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UsuarioID", usuarioId);
+
+                    connection.Open();
+
+                    // Executa a consulta e converte o resultado para string
+                    var result = command.ExecuteScalar();
+
+                    if (result != null)
+                    {
+                        nomeUsuario = result.ToString();
+                    }
+                }
+            }
+
+            return nomeUsuario;
+        }
+
+protected void btnLogout_Click(object sender, EventArgs e)
         {
             // Limpar a sessão do usuário
             Session.Clear();

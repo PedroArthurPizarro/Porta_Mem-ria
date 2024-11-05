@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ADMIN.aspx.cs" Inherits="_2024_08_22_ProjetoFinal.ADMIN" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ADMIN.aspx.cs" Inherits="Porta_Memória.ADMIN" %>
 
 <!DOCTYPE html>
 
@@ -182,3 +182,4 @@
     </form>
 </body>
 </html>
+

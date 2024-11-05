@@ -132,6 +132,15 @@ namespace Porta_Memória
         protected global::System.Web.UI.WebControls.Label Label7;
 
         /// <summary>
+        /// Controle litDocumentos.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litDocumentos;
+
+        /// <summary>
         /// Controle TextBoxNomeDoc.
         /// </summary>
         /// <remarks>

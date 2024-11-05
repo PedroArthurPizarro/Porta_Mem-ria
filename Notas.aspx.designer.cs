@@ -24,6 +24,15 @@ namespace Porta_Memória
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
+        /// Controle LinkButtonVoltar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButtonVoltar;
+
+        /// <summary>
         /// Controle TextBoxConteudoDoc.
         /// </summary>
         /// <remarks>
@@ -40,6 +49,15 @@ namespace Porta_Memória
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button ButtonSalvar;
+
+        /// <summary>
+        /// Controle ButtonLimpar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ButtonLimpar;
 
         /// <summary>
         /// Controle lblMessage.

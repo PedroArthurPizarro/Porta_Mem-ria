@@ -1,12 +1,7 @@
+﻿
 ﻿&nbsp;<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Porta_Memória.WebForm1" %><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head runat="server"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     
     <title>Página Inicial</title>
-    
-    <script type="text/javascript">
-        function refreshPage() {
-            window.location.reload();
-        }
-    </script>
 
     <style>
         /* Cores */
@@ -19,6 +14,7 @@
             --white-color: #FFFFFF;
             --red-color: #FF0400;
             --border-color: #0066CC; 
+            --yellow-color: #e1c818;
             
             /* Modo Escuro */
 
@@ -30,6 +26,8 @@
             --white-color-dark: #000000;
             --red-color-dark: #C00F0C;
             --border-color-dark: #002952;
+            --yellow-color-dark: #ffe000
+
         }
 
         body, html {
@@ -134,6 +132,19 @@
     margin-left: 10px;
     color: var(--main-blue)
 }
+
+.document-title.nome-usuario {
+    color: var(--yellow-color)/;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 24px; /* Ajuste conforme necessário */
+}
+
+.document-title.nome-usuario.dark-mode {
+    color: var(--yellow-color)/;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 24px; /* Ajuste conforme necessário */
+}
+
 
 .document-title.dark-mode{
     color: var(--white-color)
@@ -316,21 +327,75 @@
     margin-bottom: -1.5vh;
 }
 
-        .footer {
-            margin-top: 10px;
-            margin-bottom: -5%;
-            background: linear-gradient(45deg, var(--baby-blue), var(--main-blue));
-    padding: 20px;
-    background-color: var(--baby-blue);
-    color: var(--text-color);
-    text-align: center;
-    border-top: 1px solid var(--border-color);
+        footer {
+    background-color: var(--primary-blue); /* Cor de fundo do footer */
+    color: var(--white-color); /* Cor do texto */
+    padding: 30px 0; /* Espaçamento interno */
+    font-family: Arial, sans-serif; /* Fonte do footer */
+    display: flex; /* Flexbox para organizar as seções */
+    justify-content: space-around; /* Espaço entre as seções */
+    flex-wrap: wrap; /* Permite que as seções se ajustem em várias linhas */
 }
 
-         .footer.dark-mode {
-    background: linear-gradient(45deg, var(--main-blue-dark), var(--primary-blue-dark));
-    background-color: var(--baby-blue-dark);
-    color: var(--text-color-dark);
+footer h3 {
+    color: var(--yellow-color); /* Cor dos títulos */
+}
+
+footer p {
+    line-height: 1.6; /* Espaçamento entre linhas */
+    color: var(--white-color); /* Cor do texto */
+}
+
+footer ul {
+    list-style: none; /* Remove o estilo de lista */
+    padding: 0; /* Remove o padding padrão */
+}
+
+footer ul li a {
+    text-decoration: none; /* Remove sublinhado dos links */
+    color: var(--white-color); /* Cor dos links */
+}
+
+footer ul li a:hover {
+    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
+}
+
+footer .social-icons {
+    display: flex; /* Flexbox para organizar os ícones */
+    gap: 10px; /* Espaço entre os ícones */
+}
+
+footer img {
+    width: 24px; /* Tamanho dos ícones */
+}
+
+ footer.dark-mode {
+    background-color: var(--primary-blue-dark); /* Cor de fundo do footer */
+    color: var(--white-color-dark); /* Cor do texto */
+    padding: 30px 0; /* Espaçamento interno */
+    font-family: Arial, sans-serif; /* Fonte do footer */
+    display: flex; /* Flexbox para organizar as seções */
+    justify-content: space-around; /* Espaço entre as seções */
+    flex-wrap: wrap; /* Permite que as seções se ajustem em várias linhas */
+}
+
+footer h3.dark-mode {
+    color: var(--yellow-color); /* Cor dos títulos */
+}
+
+footer p.dark-mode {
+    line-height: 1.6; /* Espaçamento entre linhas */
+    color: var(--white-color-dark); /* Cor do texto */
+}
+
+footer ul {
+    list-style: none; /* Remove o estilo de lista */
+    padding: 0; /* Remove o padding padrão */
+}
+
+footer ul li a.dark-mode {
+    text-decoration: none; /* Remove sublinhado dos links */
+    color: var(--white-color-dark); /* Cor dos links */
 }
         
         .auto-style6 {
@@ -526,7 +591,7 @@ input:checked + .slider:before {
             document.body.classList.toggle('dark-mode'); // Alterna o dark-mode no body
 
             // Seleciona todos os elementos que têm a classe modificada no dark mode
-            const elementsToToggle = document.querySelectorAll('.header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
+            const elementsToToggle = document.querySelectorAll('footer, .nome-usuario, .header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
             elementsToToggle.forEach((element) => {
                 element.classList.toggle('dark-mode'); // Alterna a classe dark-mode em todos os elementos
             });
@@ -542,7 +607,7 @@ input:checked + .slider:before {
         // Função para atualizar as imagens e ícones conforme o modo escuro/claro
         function updateLogoAndIcons(isDarkMode) {
             const logoImage = document.getElementById('<%= Image1.ClientID %>');
-        const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>');
+            const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>');
         const imageButton3 = document.getElementById('<%= ImageButton3.ClientID %>');
         const imageButton4 = document.getElementById('<%= ImageButton4.ClientID %>');
             const imageButton5 = document.getElementById('<%= ImageButton5.ClientID %>');
@@ -604,7 +669,7 @@ input:checked + .slider:before {
                 document.body.classList.add('dark-mode');  // Habilitar dark mode se já estiver ativado
 
                 // Selecionar todos os elementos e adicionar a classe dark-mode
-                const elementsToToggle = document.querySelectorAll('.header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
+                const elementsToToggle = document.querySelectorAll('footer, .nome-usuario, .header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
                 elementsToToggle.forEach((element) => {
                     element.classList.add('dark-mode');
                 });
@@ -653,9 +718,26 @@ input:checked + .slider:before {
                 });
             }
         });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Função para aplicar ou remover o modo escuro
+            function applyDarkMode(isDark) {
+                if (isDark) {
+                    document.body.classList.add("dark-mode");
+                } else {
+                    document.body.classList.remove("dark-mode");
+                }
 
+                document.querySelectorAll('.container, .header, .image-bar, .documents, .document-title').forEach(function (el) {
+                    if (isDark) {
+                        el.classList.add('dark-mode');
+                    } else {
+                        el.classList.remove('dark-mode');
+                    }
+                });
+            }
+
+        });
     </script>
-
 </head>
 <body>
     <form id="form1" runat="server">
@@ -677,7 +759,7 @@ input:checked + .slider:before {
 
                         <div class="dropdown">
                             <div id="dropdown-content" class="dropdown-content" onclick="event.stopPropagation();">
-                                <a> sla1 </a>
+                                
                                 <div class="toggle-dark-mode">
                                     <label class="switch">
                                         <input type="checkbox" id="darkModeSwitch" onclick="toggleDarkMode()">
@@ -685,6 +767,8 @@ input:checked + .slider:before {
                                     </label>
                                     <span>Modo Escuro</span>
                                 </div>
+
+                                <a href="Ajuda.aspx"> Ajuda </a>
 
                                 <asp:LinkButton ID="btnTrocarConta" runat="server" OnClick="btnLogout_Click" CssClass="a">
                                     Trocar de Conta
@@ -708,7 +792,10 @@ input:checked + .slider:before {
                             OnClientClick="window.location.href='/Lixeira.aspx'; return false;" />
                     </div>
 
-                    <asp:Label ID="Label7" runat="server" Text="Documentos" CssClass="document-title" />
+                <asp:Label ID="Label7" runat="server" CssClass="document-title" TextMode="Encode" />
+                <span class="document-title">
+    <asp:Literal ID="litDocumentos" runat="server" />
+                </span>
 
                     <div class="documents">
                         <div class="document-item AddDoc">
@@ -741,16 +828,58 @@ input:checked + .slider:before {
                             </ItemTemplate>
                         </asp:Repeater>
                     </div>
-
-                    <div class="footer">
-                        <span class="auto-style6" style="font-family: Arial, sans-serif; font-style: italic; font-weight: 700;">
-                            ©Porta Memória, all rights reserved.
-                        </span>
-                    </div>
                 </div>
             </ContentTemplate>
         </asp:UpdatePanel>
-    </form>
-</body>
+    </form><footer>
+    <!-- Seção Sobre Nós -->
+    <div style="flex: 1; min-width: 200px; margin: 10px;">
+        <h3>Sobre Porta Memória</h3>
+        <p>
+            Porta Memória é sua carteira virtual segura e acessível para armazenar documentos importantes na nuvem. Nossa missão é proteger suas informações e oferecer uma experiência fácil e intuitiva.
+        </p>
+    </div>
 
+    <!-- Seção Links Úteis -->
+    <div style="flex: 1; min-width: 200px; margin: 10px;">
+        <h3>Links Úteis</h3>
+        <ul>
+            <li><a href="Index.aspx">Página Inicial</a></li>
+            <li><a href="Notas.aspx">Bloco de Notas</a></li>
+            <li><a href="Perfil.aspx">Perfil</a></li>
+            <li><a href="Ajuda.aspx">Ajuda</a></li>
+        </ul>
+    </div>
+
+    <!-- Seção Contato -->
+    <div style="flex: 1; min-width: 200px; margin: 10px;">
+        <h3>Contato</h3>
+        <p>
+            <strong>Email:</strong> contato@portamemoria.com<br/>
+            <strong>Telefone:</strong> (11) 1234-5678<br/>
+            <strong>Endereço:</strong> Rua Exemplo, 123, São Paulo, SP
+        </p>
+    </div>
+
+    <!-- Seção Redes Sociais -->
+    <div style="flex: 1; min-width: 200px; margin: 10px;">
+        <h3>Siga-nos</h3>
+        <div class="social-icons">
+            <a href="https://www.facebook.com/portamemoria" target="_blank">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png" alt="Facebook"/>
+            </a>
+            <a href="https://www.twitter.com/portamemoria" target="_blank">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png" alt="Twitter"/>
+            </a>
+            <a href="https://www.instagram.com/portamemoria" target="_blank">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram"/>
+            </a>
+            <a href="https://www.linkedin.com/company/portamemoria" target="_blank">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn"/>
+            </a>
+        </div>
+    </div>
+</footer>
+</body>
+    
 </html>

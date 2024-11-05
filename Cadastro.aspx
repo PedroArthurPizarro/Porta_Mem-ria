@@ -99,6 +99,18 @@
             color: #FF0000;
         }
     </style>
+    <script type="text/javascript">
+    function validarSenha() {
+        var senha = document.getElementById('<%= txtSenha.ClientID %>').value;
+        var confirmarSenha = document.getElementById('<%= txtConfirmarSenha.ClientID %>').value;
+
+        if (senha !== confirmarSenha) {
+            alert("As senhas não coincidem.");
+            return false; // Impede o envio do formulário
+        }
+        return true; // Permite o envio do formulário
+    }
+</script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -127,12 +139,12 @@
                     <asp:TextBox ID="txtTelefone" runat="server"></asp:TextBox>
 
                     <asp:Label ID="lblSenha" runat="server" Text="Senha:"></asp:Label>
-                    <asp:TextBox ID="txtSenha" runat="server" TextMode="Password"></asp:TextBox>
+<asp:TextBox ID="txtSenha" runat="server" TextMode="Password"></asp:TextBox>
 
-                    <asp:Label ID="lblConfirmarSenha" runat="server" Text="Confirmar Senha:"></asp:Label>
-                    <asp:TextBox ID="txtConfirmarSenha" runat="server" TextMode="Password" OnTextChanged="txtConfirmarSenha_TextChanged" AutoPostBack="true"></asp:TextBox>
-                   
-                    <asp:Button ID="btnCadastrar" runat="server" Text="Cadastrar" CssClass="button" OnClick="btnCadastrar_Click" Height="46px" Width="451px" />
+<asp:Label ID="lblConfirmarSenha" runat="server" Text="Confirmar Senha:"></asp:Label>
+<asp:TextBox ID="txtConfirmarSenha" runat="server" TextMode="Password"></asp:TextBox>
+
+<asp:Button ID="btnCadastrar" runat="server" Text="Cadastrar" CssClass="button" OnClick="btnCadastrar_Click" Height="46px" Width="451px" OnClientClick="return validarSenha();" />
                 </div>
             </div>
 
