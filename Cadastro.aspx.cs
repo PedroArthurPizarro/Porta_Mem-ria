@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 
@@ -16,12 +16,25 @@ namespace Porta_Memória
             string senha = txtSenha.Text.Trim();
             string confirmarSenha = txtConfirmarSenha.Text.Trim();
 
-            // Verifica se as senhas coincidem
+            // Verifica se os campos obrigatórios estão preenchidos
+            if (string.IsNullOrWhiteSpace(nomeUsuario) ||
+                string.IsNullOrWhiteSpace(sobrenomeUsuario) ||
+                string.IsNullOrWhiteSpace(email) ||
+                string.IsNullOrWhiteSpace(telefone) ||
+                string.IsNullOrWhiteSpace(cpf) ||
+                string.IsNullOrWhiteSpace(senha) ||
+                string.IsNullOrWhiteSpace(confirmarSenha))
+            {
+                lblMensagem.Text = "Todos os campos são obrigatórios!";
+                lblMensagem.ForeColor = System.Drawing.Color.Red;
+                return; // Interrompe o processamento se algum campo estiver vazio
+            }
+
             if (senha != confirmarSenha)
             {
                 lblMensagem.Text = "As senhas não coincidem!";
                 lblMensagem.ForeColor = System.Drawing.Color.Red;
-                return;
+                return; // Interrompe o processamento se as senhas não coincidirem
             }
 
             string conexao = WebConfigurationManager.ConnectionStrings["Porta_MemóriaDBConnectionString"].ConnectionString;
@@ -31,8 +44,6 @@ namespace Porta_Memória
                 try
                 {
                     conn.Open();
-
-                    // Verifica se o email já existe
                     string checkEmailQuery = "SELECT COUNT(*) FROM dbo.PortaMemoria WHERE EMAIL = @Email";
                     using (SqlCommand checkEmailCmd = new SqlCommand(checkEmailQuery, conn))
                     {
@@ -43,11 +54,10 @@ namespace Porta_Memória
                         {
                             lblMensagem.Text = "Este email já está cadastrado.";
                             lblMensagem.ForeColor = System.Drawing.Color.Red;
-                            return;
+                            return; // Interrompe o processamento se o email já estiver cadastrado
                         }
                     }
 
-                    // Insere o novo usuário
                     string SQL = "INSERT INTO dbo.PortaMemoria (NOME, SOBRENOME, EMAIL, TELEFONE, CPF, SENHA, TIPO) VALUES (@Nome, @Sobrenome, @Email, @Telefone, @Cpf, @Senha, 'USER')";
                     using (SqlCommand cmd = new SqlCommand(SQL, conn))
                     {
@@ -56,7 +66,7 @@ namespace Porta_Memória
                         cmd.Parameters.AddWithValue("@Email", email);
                         cmd.Parameters.AddWithValue("@Telefone", telefone);
                         cmd.Parameters.AddWithValue("@Cpf", cpf);
-                        cmd.Parameters.AddWithValue("@Senha", senha);
+                        cmd.Parameters.AddWithValue("@Senha", senha); // Sem criptografia
 
                         int rows = cmd.ExecuteNonQuery();
 
@@ -64,7 +74,7 @@ namespace Porta_Memória
                         {
                             lblMensagem.Text = "Cadastro realizado com sucesso!";
                             lblMensagem.ForeColor = System.Drawing.Color.Green;
-                            Response.Redirect("~/Login.aspx"); // Redireciona para a página de Login
+                            Response.Redirect("~/Login.aspx");
                         }
                         else
                         {
@@ -79,25 +89,6 @@ namespace Porta_Memória
                     lblMensagem.ForeColor = System.Drawing.Color.Red;
                 }
             }
-        }
-
-        protected void txtConfirmarSenha_TextChanged(object sender, EventArgs e)
-        {
-            // Verifica se as senhas coincidem ao mudar o campo confirmar senha
-            if (txtSenha.Text.Trim() != txtConfirmarSenha.Text.Trim())
-            {
-                lblMensagem.Text = "As senhas não coincidem!";
-                lblMensagem.ForeColor = System.Drawing.Color.Red;
-            }
-            else
-            {
-                lblMensagem.Text = string.Empty; // Limpa a mensagem de erro se as senhas coincidirem
-            }
-        }
-
-        protected void LinkButton1_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("~/Login.aspx");
         }
     }
 }
