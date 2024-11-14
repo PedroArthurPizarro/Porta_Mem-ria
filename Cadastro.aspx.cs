@@ -1,11 +1,31 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Web.Configuration;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Porta_Memória
 {
     public partial class Cadastro : System.Web.UI.Page
     {
+        // Função para gerar o hash SHA-256 da senha
+        public static string GetSha256Hash(string valor)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                // Converte a senha em bytes e gera o hash
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(valor));
+
+                // Converte o hash em uma string hexadecimal
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
         protected void btnCadastrar_Click(object sender, EventArgs e)
         {
             string nomeUsuario = txtNome.Text.Trim();
@@ -30,6 +50,7 @@ namespace Porta_Memória
                 return; // Interrompe o processamento se algum campo estiver vazio
             }
 
+            // Verifica se as senhas coincidem
             if (senha != confirmarSenha)
             {
                 lblMensagem.Text = "As senhas não coincidem!";
@@ -37,6 +58,10 @@ namespace Porta_Memória
                 return; // Interrompe o processamento se as senhas não coincidirem
             }
 
+            // Aplica o hash SHA-256 à senha
+            string senhaHash = GetSha256Hash(senha);
+
+            // String de conexão ao banco de dados
             string conexao = WebConfigurationManager.ConnectionStrings["Porta_MemóriaDBConnectionString"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(conexao))
@@ -44,6 +69,8 @@ namespace Porta_Memória
                 try
                 {
                     conn.Open();
+
+                    // Verifica se o email já existe no banco
                     string checkEmailQuery = "SELECT COUNT(*) FROM dbo.PortaMemoria WHERE EMAIL = @Email";
                     using (SqlCommand checkEmailCmd = new SqlCommand(checkEmailQuery, conn))
                     {
@@ -58,6 +85,7 @@ namespace Porta_Memória
                         }
                     }
 
+                    // Insere o novo usuário com a senha em hash SHA-256
                     string SQL = "INSERT INTO dbo.PortaMemoria (NOME, SOBRENOME, EMAIL, TELEFONE, CPF, SENHA, TIPO) VALUES (@Nome, @Sobrenome, @Email, @Telefone, @Cpf, @Senha, 'USER')";
                     using (SqlCommand cmd = new SqlCommand(SQL, conn))
                     {
@@ -66,7 +94,7 @@ namespace Porta_Memória
                         cmd.Parameters.AddWithValue("@Email", email);
                         cmd.Parameters.AddWithValue("@Telefone", telefone);
                         cmd.Parameters.AddWithValue("@Cpf", cpf);
-                        cmd.Parameters.AddWithValue("@Senha", senha); // Sem criptografia
+                        cmd.Parameters.AddWithValue("@Senha", senhaHash); // Agora com senha em hash SHA-256
 
                         int rows = cmd.ExecuteNonQuery();
 
