@@ -14,29 +14,18 @@ namespace Porta_Memória
             if (Session["UsuarioId"] == null)
             {
                 Response.Redirect("Login.aspx");
+
             }
             else
             {
                 if (!IsPostBack)
                 {
-                    int usuarioId;
-                    if (int.TryParse(Session["UsuarioId"].ToString(), out usuarioId))
-                    {
-                        string nomeUsuario = ObterNomeUsuario(usuarioId);
+                    CarregarDocumentos(); // Carrega os documentos e preenche os campos ao recarregar a página
 
-                        // Define o texto do Label com o nome do usuário
-                        Label7.Text = $"Documentos de <span style='color: #e1c818;'>{nomeUsuario}</span>";
-                        Label7.Text = Label7.Text.Replace("<span style='color: #e1c818;'>", "<span style='color: #e1c818;'>");
-                    }
-                    else
-                    {
-                        Label7.Text = "Erro ao carregar nome do usuário.";
-                    }
                 }
+
             }
         }
-
-
 
 
         // Carregar documentos do banco de dados
@@ -47,20 +36,21 @@ namespace Porta_Memória
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // Carregar apenas documentos que não são do tipo 'BlocoDeNotas'
-                string query = "SELECT DocumentoID, TipoDocumento, Conteudo FROM Documentos WHERE UsuarioID = @UsuarioID AND TipoDocumento = 'Documento' AND Lixeira = 0";
-
+                // Excluir apenas documentos do tipo 'BlocoDeNotas'
+                string query = "SELECT DocumentoID, TipoDocumento, Conteudo FROM Documentos WHERE UsuarioID = @UsuarioID AND TipoDocumento != 'BlocoDeNotas' AND Lixeira = 0";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@UsuarioID", usuarioId);
                     connection.Open();
 
-                    // Usar DataTable para armazenar os dados
                     DataTable dataTable = new DataTable();
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         dataTable.Load(reader);
                     }
+
+                    // Log para verificar quantos documentos foram carregados
+                    System.Diagnostics.Debug.WriteLine("Documentos carregados: " + dataTable.Rows.Count);
 
                     // Associar os dados ao Repeater
                     rptDocuments.DataSource = dataTable;
@@ -108,18 +98,152 @@ namespace Porta_Memória
             }
         }
 
+        // Método genérico para salvar qualquer documento
+        private void SalvarDocumento(string tipoDocumento, string conteudo)
+        {
+            try
+            {
+                int usuarioId = (int)Session["UsuarioId"];
+
+                if (!string.IsNullOrEmpty(conteudo))
+                {
+                    string connectionString = ConfigurationManager.ConnectionStrings["Porta_MemóriaDBConnectionString"].ConnectionString;
+
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        string query = "INSERT INTO Documentos (UsuarioID, TipoDocumento, Conteudo, DataInsercao) VALUES (@UsuarioID, @TipoDocumento, @Conteudo, GETDATE())";
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@UsuarioID", usuarioId);
+                            cmd.Parameters.AddWithValue("@TipoDocumento", tipoDocumento);
+                            cmd.Parameters.AddWithValue("@Conteudo", conteudo);
+
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Limpar o campo de conteúdo após salvar
+                    LimparCampo(tipoDocumento);
+                    CarregarDocumentos();
+                }
+                else
+                {
+                    // Exibir mensagem de erro ou alerta para o usuário
+                    Response.Write($"Por favor, insira um {tipoDocumento} válido.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Write($"Erro ao salvar o {tipoDocumento}: {ex.Message}");
+            }
+        }
+
+
+        private void LimparCampo(string tipoDocumento)
+        {
+
+            CarregarDocumentos();
+        }
+
+        // Eventos dos botões salvar
+
+
+        // Função para deletar documentos
+        private void DeletarDocumento(string tipoDocumento, TextBox textBox)
+        {
+            try
+            {
+                int usuarioId = (int)Session["UsuarioId"];
+
+                string connectionString = ConfigurationManager.ConnectionStrings["Porta_MemóriaDBConnectionString"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM Documentos WHERE UsuarioID = @UsuarioID AND TipoDocumento = @TipoDocumento";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UsuarioID", usuarioId);
+                        cmd.Parameters.AddWithValue("@TipoDocumento", tipoDocumento);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                }
+
+                // Limpar a TextBox
+                textBox.Text = "";
+
+                // Atualizar a lista de documentos
+                CarregarDocumentos();
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT DocumentoID, TipoDocumento, Conteudo FROM Documentos";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        rptDocuments.DataSource = reader;
+                        rptDocuments.DataBind();
+                    }
+                }
+                // Exibir mensagem de sucesso
+                lblMessage.Text = tipoDocumento + " deletado com sucesso!";
+                lblMessage.ForeColor = System.Drawing.Color.Green;
+            }
+            catch (Exception ex)
+            {
+                // Exibir mensagem de erro
+                lblMessage.Text = "Erro ao deletar " + tipoDocumento + ": " + ex.Message;
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+            }
+        }
+
+
+
+
+
+
+        // Método para carregar os documentos
+
+
+        protected void rptDocuments_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Encontra os controles no item atual
+                Button btnSaveDynamic = (Button)e.Item.FindControl("btnSaveDynamic");
+                ImageButton btnTrashDynamic = (ImageButton)e.Item.FindControl("btnTrashDynamic");
+
+                // Garante que os botões estejam inicialmente ocultos
+                btnSaveDynamic.Style["display"] = "none";
+                btnTrashDynamic.Style["display"] = "none";
+            }
+        }
+
+
         protected void btnEditar_Click(object sender, EventArgs e)
         {
-            ImageButton btnEditar = (ImageButton)sender;
-            var documentItem = (RepeaterItem)btnEditar.NamingContainer;
+            // Obtém o botão clicado e seu RepeaterItem
+            ImageButton btn = (ImageButton)sender;
+            RepeaterItem item = (RepeaterItem)btn.NamingContainer;
 
-            // Encontrar a TextBox e torná-la editável
-            TextBox txtDynamicContent = (TextBox)documentItem.FindControl("txtDynamicContent");
+            // Encontra os controles necessários no RepeaterItem
+            TextBox txtDynamicContent = (TextBox)item.FindControl("txtDynamicContent");
+            Button btnSaveDynamic = (Button)item.FindControl("btnSaveDynamic");
+            ImageButton btnTrashDynamic = (ImageButton)item.FindControl("btnTrashDynamic");
+
+            // Torna a TextBox editável
             txtDynamicContent.ReadOnly = false;
+            txtDynamicContent.Focus();
 
-            // Forçar o foco na TextBox para iniciar a edição
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "enableEditScript", "enableEdit(document.getElementById('" + txtDynamicContent.ClientID + "'));", true);
+            // Torna os botões Salvar e Excluir visíveis
+            btnSaveDynamic.Style["display"] = "inline-block";
+            btnTrashDynamic.Style["display"] = "inline-block";
         }
+
+
 
         protected void btnSaveDynamic_Click(object sender, EventArgs e)
         {
@@ -249,26 +373,6 @@ namespace Porta_Memória
             }
         }
 
-        protected void saveDocument(object sender, EventArgs e)
-        {
-
-            // Obtenha o botão que foi clicado
-            Button btn = (Button)sender;
-            // Obtenha o ID do documento (CommandArgument) para identificar qual documento salvar
-            string documentoId = btn.CommandArgument;
-
-            // Aqui você deve implementar a lógica para salvar o conteúdo do documento
-            // Para isso, você pode acessar a TextBox correspondente ao documento a partir do Repeater
-            RepeaterItem item = (RepeaterItem)btn.NamingContainer;
-            TextBox txtDynamicContent = (TextBox)item.FindControl("txtDynamicContent");
-
-            // Exemplo: lógica para salvar o conteúdo no banco de dados
-            string novoConteudo = txtDynamicContent.Text;
-
-            // Adicione aqui o seu código para atualizar o banco de dados com novoConteudo usando documentoId
-
-            // Se necessário, você pode mostrar uma mensagem de sucesso ou atualizar a interface
-        }
 
         private int ObterDocumentoID(string tipoDocumento)
         {
@@ -294,35 +398,8 @@ namespace Porta_Memória
             }
             return documentoID;
         }
-        private string ObterNomeUsuario(int usuarioId)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["Porta_MemóriaDBConnectionString"].ConnectionString;
-            string nomeUsuario = string.Empty;
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "SELECT NOME FROM PortaMemoria WHERE [USER] = @UsuarioID";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@UsuarioID", usuarioId);
-
-                    connection.Open();
-
-                    // Executa a consulta e converte o resultado para string
-                    var result = command.ExecuteScalar();
-
-                    if (result != null)
-                    {
-                        nomeUsuario = result.ToString();
-                    }
-                }
-            }
-
-            return nomeUsuario;
-        }
-
-protected void btnLogout_Click(object sender, EventArgs e)
+        protected void btnLogout_Click(object sender, EventArgs e)
         {
             // Limpar a sessão do usuário
             Session.Clear();

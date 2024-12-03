@@ -21,10 +21,10 @@
 
         #senhaGeneratorForm {
             background-color: #3F6071;
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 10px;
+            padding: 25px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-            width: 400px;
+            width: 550px;
             box-sizing: border-box;
             text-align: center;
             position: relative; /* Para posicionar o botão de seta */
@@ -32,19 +32,19 @@
 
         h2 {
             color: #00AAFF;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             font-weight: bold;
             color: #FFFFFF;
-            text-align: left;
+            text-align: center;
         }
 
         select, input[type="number"], button {
-            width: calc(100% - 20px);
+            width: calc(100% - 95px);
             padding: 10px;
             margin-bottom: 15px;
             border: none;
@@ -88,22 +88,43 @@
         .back-button:hover {
             color: #008FCC;
         }
+
+        .icon-back {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: #0077cc;
+    font-weight: bold;
+}
+
+.icon-back img {
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.icon-back:hover {
+    text-decoration: underline;
+}
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
         <div id="senhaGeneratorForm">
             <!-- Botão de Seta para Voltar -->
-            <asp:LinkButton ID="btnBack" runat="server" CssClass="back-button" OnClick="btnBack_Click">
-                &#x2190; <!-- Unicode para seta esquerda -->
-            </asp:LinkButton>
-
+           <a href="Index.aspx" title="costas ícones" class="icon-back">
+    <img src="https://cdn-icons-png.flaticon.com/512/109/109618.png" alt="Ícone de voltar" />
+</a>
             <h2>Gerador de Senhas</h2>
-            
+           
             <label for="length">Número de Caracteres:</label>
-            <asp:TextBox ID="txtLength" runat="server" Text="12" />
+            <asp:TextBox ID="txtLength" runat="server" Text="12" Height="29px" Width="190px" />
 
-            <label for="charType">Tipo de Caracteres:</label>
+            <label for="charType">
+            <br />
+            Tipo de Caracteres:</label>
             <asp:DropDownList ID="ddlCharType" runat="server">
                 <asp:ListItem Text="Apenas Números" Value="Numbers" />
                 <asp:ListItem Text="Apenas Letras e Símbolos" Value="LettersSymbols" />

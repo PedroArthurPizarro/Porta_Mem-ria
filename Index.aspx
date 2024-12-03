@@ -566,123 +566,105 @@ input:checked + .slider:before {
             }
         }
 
-        function toggleVisibility(button) {
-            var documentItem = button.closest('.document-item');
-            var textBox = documentItem.querySelector('.DocumentTextBox'); // TextBox do conteúdo
+        function toggleTextMask(button) {
+            // Obter o elemento do TextBox associado ao botão
+            const documentItem = button.closest('.document-item');
+            const textBox = documentItem.querySelector('.DocumentTextBox');
+
+            // Garantir que o campo está visível
+            textBox.style.display = 'block'; // Assegurar que a TextBox não seja escondida
+            textBox.style.visibility = 'visible'; // Forçar a visibilidade se necessário
 
             // Verificar se o conteúdo está mascarado
             if (textBox.dataset.masked === "true") {
-                // Exibir o conteúdo original
-                textBox.value = textBox.dataset.originalContent;
-                textBox.dataset.masked = "false";
+                textBox.value = textBox.dataset.originalContent || textBox.value; // Restaurar texto original
+                textBox.dataset.masked = "false"; // Atualizar estado para "não mascarado"
                 button.src = "/Imagens/olho.png"; // Ícone do olho aberto
             } else {
-                // Mascarar o conteúdo
                 textBox.dataset.originalContent = textBox.value; // Armazenar o conteúdo original
-                textBox.value = textBox.value.replace(/./g, '*'); // Substituir por asteriscos
-                textBox.dataset.masked = "true";
+                textBox.value = "*".repeat(textBox.value.length); // Substituir o texto por asteriscos
+                textBox.dataset.masked = "true"; // Atualizar estado para "mascarado"
                 button.src = "/Imagens/olho-vermelho.png"; // Ícone do olho fechado
             }
         }
 
-
+        // Configurar evento nos botões ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            const visibilityButtons = document.querySelectorAll('.btnToggleVisibility');
+            visibilityButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevenir comportamento padrão
+                    toggleTextMask(this); // Chamar a função passando o botão clicado
+                });
+            });
+        });
 
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode'); // Alterna o dark-mode no body
+            const isDarkModeEnabled = document.body.classList.toggle('dark-mode');
 
-            // Seleciona todos os elementos que têm a classe modificada no dark mode
+            // Aplicar a classe "dark-mode" nos elementos relevantes
             const elementsToToggle = document.querySelectorAll('footer, .nome-usuario, .header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
             elementsToToggle.forEach((element) => {
-                element.classList.toggle('dark-mode'); // Alterna a classe dark-mode em todos os elementos
+                element.classList.toggle('dark-mode');
             });
 
-            // Armazenar a preferência no localStorage
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            // Atualizar imagens e ícones conforme o modo
+            updateLogoAndIcons(isDarkModeEnabled);
 
-            // Mudar o logotipo dependendo do modo
-            updateLogoAndIcons(isDarkMode);
+            localStorage.setItem('darkMode', isDarkModeEnabled ? 'enabled' : 'disabled');
         }
 
-        // Função para atualizar as imagens e ícones conforme o modo escuro/claro
+        // Função para atualizar as imagens e ícones
         function updateLogoAndIcons(isDarkMode) {
             const logoImage = document.getElementById('<%= Image1.ClientID %>');
-            const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>');
+        const imageButton2 = document.getElementById('<%= ImageButton2.ClientID %>');
         const imageButton3 = document.getElementById('<%= ImageButton3.ClientID %>');
         const imageButton4 = document.getElementById('<%= ImageButton4.ClientID %>');
             const imageButton5 = document.getElementById('<%= ImageButton5.ClientID %>');
             const editButtons = document.querySelectorAll('.btnEditText');
-            const olhoButtons = document.querySelectorAll('.btnToggleVisibility');
-            const olhoNotButtons = document.querySelectorAll('.btnToggleVisibilityNot');
+            const visibilityButtons = document.querySelectorAll('.btnToggleVisibility');
 
             if (isDarkMode) {
-                logoImage.src = '/Imagens/Porta_Memória_Dark.png';  // Caminho para o logotipo modo escuro
-                imageButton2.src = '/Imagens/cadeado_dark.png';  // Caminho para a imagem do cadeado modo escuro
+                logoImage.src = '/Imagens/Porta_Memória_Dark.png';
+                imageButton2.src = '/Imagens/cadeado_dark.png';
                 imageButton3.src = '/Imagens/note_dark.png';
                 imageButton4.src = '/Imagens/senha_dark.png';
                 imageButton5.src = '/Imagens/lixeira_dark.png';
 
-                // Atualizar as imagens dos botões de edição
-                editButtons.forEach(button => {
-                    button.src = '/Imagens/edit_dark.png';  // Caminho para a imagem do botão editar no modo escuro
-                });
-
-                // Atualizar as imagens dos botões de "olho"
-                olhoButtons.forEach(button => {
-                    button.src = '/Imagens/olho_dark.png';  // Caminho para a imagem do olho no modo escuro
-                });
-
-                // Atualizar as imagens dos botões de "olho vermelho"
-                olhoNotButtons.forEach(button => {
-                    button.src = '/Imagens/olho-vermelho_dark.png';  // Caminho para a imagem do olho vermelho no modo escuro
-                });
+                editButtons.forEach(button => button.src = '/Imagens/edit_dark.png');
+                visibilityButtons.forEach(button => button.src = '/Imagens/olho_dark.png');
             } else {
-                logoImage.src = '/Imagens/Porta_Memória.png';  // Caminho para o logotipo modo claro
-                imageButton2.src = '/Imagens/cadeado.png';  // Caminho para a imagem do cadeado modo claro
+                logoImage.src = '/Imagens/Porta_Memória.png';
+                imageButton2.src = '/Imagens/cadeado.png';
                 imageButton3.src = '/Imagens/note.png';
                 imageButton4.src = '/Imagens/senha.png';
                 imageButton5.src = '/Imagens/lixeira.png';
 
-                // Atualizar as imagens dos botões de edição
-                editButtons.forEach(button => {
-                    button.src = '/Imagens/edit.png';  // Caminho para a imagem do botão editar no modo claro
-                });
-
-                // Atualizar as imagens dos botões de "olho"
-                olhoButtons.forEach(button => {
-                    button.src = '/Imagens/olho.png';  // Caminho para a imagem do olho no modo claro
-                });
-
-                // Atualizar as imagens dos botões de "olho vermelho"
-                olhoNotButtons.forEach(button => {
-                    button.src = '/Imagens/olho-vermelho.png';  // Caminho para a imagem do olho vermelho no modo claro
-                });
+                editButtons.forEach(button => button.src = '/Imagens/edit.png');
+                visibilityButtons.forEach(button => button.src = '/Imagens/olho.png');
             }
         }
 
-        // Função para carregar o estado do dark mode ao inicializar a página
+        // Carregar o Modo Escuro do localStorage ao carregar a página
         function loadDarkModeFromLocalStorage() {
             const darkMode = localStorage.getItem('darkMode');
-            const isDarkMode = (darkMode === 'enabled');
+            const isDarkModeEnabled = (darkMode === 'enabled');
 
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');  // Habilitar dark mode se já estiver ativado
-
-                // Selecionar todos os elementos e adicionar a classe dark-mode
+            if (isDarkModeEnabled) {
+                document.body.classList.add('dark-mode');
                 const elementsToToggle = document.querySelectorAll('footer, .nome-usuario, .header, .inputTextBox, .body, .document-title, .container, .image-bar, .documents, .document-item, .document-item a, #ButtonAddDoc, .footer, .btnSaveDoc, .panel-content label, .dropdown-content a, .slider');
                 elementsToToggle.forEach((element) => {
                     element.classList.add('dark-mode');
                 });
-            }
 
-            // Atualizar logo e ícones de acordo com o modo
-            updateLogoAndIcons(isDarkMode);
+                updateLogoAndIcons(true);
+            }
         }
 
-        // Verificar o estado do dark mode ao carregar a página
-        window.onload = function () {
-            loadDarkModeFromLocalStorage(); // Carrega o estado do dark mode do localStorage
-        };
+        // Executar ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDarkModeFromLocalStorage();
+        });
         function enableEditMode(button) {
             const documentItem = button.closest('.document-item');
             const textBox = documentItem.querySelector('.DocumentTextBox');
@@ -738,13 +720,16 @@ input:checked + .slider:before {
 
         });
     </script>
+
+
+
 </head>
 <body>
     <form id="form1" runat="server">
         <asp:Label ID="lblMessage" runat="server" CssClass="statusMessage" />
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
 
-        <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>
                 <div class="container">
                     <div class="header">
@@ -797,14 +782,14 @@ input:checked + .slider:before {
     <asp:Literal ID="litDocumentos" runat="server" />
                 </span>
 
-                    <div class="documents">
+                <div class="documents">
                         <div class="document-item AddDoc">
                             <asp:TextBox ID="TextBoxNomeDoc" runat="server" CssClass="inputTextBox" Placeholder="Nome do Documento"></asp:TextBox>
                             <asp:TextBox ID="TextBoxConteudoDoc" runat="server" TextMode="MultiLine" CssClass="inputTextBox inputTextBoxConteudoDoc" Placeholder="Conteúdo do Documento"></asp:TextBox>
                             <asp:Button ID="ButtonAddDoc" runat="server" Text="Adicionar Documento" OnClick="ButtonAddDoc_Click" CssClass="btnAddDoc" />
                         </div>
 
-                        <asp:Repeater ID="rptDocuments" runat="server">
+                        <asp:Repeater ID="rptDocuments" runat="server" OnItemDataBound="rptDocuments_ItemDataBound">
                             <ItemTemplate>
                                 <div class="document-item">
                                     <asp:LinkButton ID="lnkDocName" runat="server" Text='<%# Eval("TipoDocumento") %>' CommandArgument='<%# Eval("DocumentoID") %>'></asp:LinkButton>
@@ -822,7 +807,7 @@ input:checked + .slider:before {
                                         <asp:Button ID="btnSaveDynamic" runat="server" Text="Salvar" CommandArgument='<%# Eval("DocumentoID") %>'
                                             CssClass="btnSaveDoc" OnClick="btnSaveDynamic_Click" />
                                         <asp:ImageButton ID="btnTrashDynamic" runat="server" ImageUrl="~/Imagens/delete.png"
-                                            CommandArgument='<%# Eval("DocumentoID") %>' CssClass="btnTrashDoc" OnClick="btnTrashDynamic_Click" />
+                                            CommandArgument='<%# Eval("DocumentoID") %>' CssClass="btnTrashDoc" Style="display:none;" OnClick="btnTrashDynamic_Click" />
                                     </div>
                                 </div>
                             </ItemTemplate>
